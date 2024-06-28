@@ -5,12 +5,18 @@ import { getUsers } from "../api/FirebaseApi";
 import { Header } from "../pages/Header";
 import "../App.css";
 import { setLogLevel } from "firebase/app";
+import {
+  SearchTwoTone,
+  NavigateNextRounded,
+  NavigateBeforeRounded,
+} from "@mui/icons-material";
 
 export const SearchPage = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State for the search term
   const [searchResults, setSearchResults] = useState([]); // State to store search results
   const [recResult, setRec] = useState([]);
   const [typeSearch, setType] = useState(true);
+  const [showBtn, setShowBtn] = useState(true);
   const [userList, setList] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [curPage, setPage] = useState(0);
@@ -44,6 +50,8 @@ export const SearchPage = ({ user }) => {
         }
       }
       setPage(pageNum);
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
       const results = await getSearch("", pageNum);
       setSearchResults(results);
     } catch (error) {
@@ -117,6 +125,7 @@ export const SearchPage = ({ user }) => {
         <button onClick={() => handleType(false)}>Users</button>
       </div>
 
+{/*
       <select id="dropdown" value={selectedOption} onChange={handleDropChange}>
         <option value="">Select</option>
         <option value="Action">Action</option>
@@ -127,17 +136,16 @@ export const SearchPage = ({ user }) => {
         <option value="Comedy">Comedy</option>
         <option value="Drama">Drama</option>
       </select>
+      */}
 
-      <div className="Search-Scroll">
+      
         {typeSearch ? (
-          searchResults.map((item, index) => (
+        <div className="Search-Scroll">
+          {searchResults.map((item, index) => (
             <div key={index}>
               <button onClick={() => gotopage(item.id || item.show.id)}>
                 {item.image && item.image.medium ? (
-                  <img
-                    src={item.image.medium}
-                    alt={item.name || "Image"}
-                  />
+                  <img src={item.image.medium} alt={item.name || "Image"} />
                 ) : item.show && item.show.image && item.show.image.medium ? (
                   <img
                     src={item.show.image.medium}
@@ -149,53 +157,38 @@ export const SearchPage = ({ user }) => {
               </button>
               <p style={{ color: "white" }}> {item.name || item.show.name}</p>
             </div>
-          ))
+          ))}
+          </div>
         ) : (
-          <div className="User-Scroll">
-            {userList.map((item, index) => (
-              <div key={index}>
-                <button className="User-Btn" onClick={() => gotoUser(item)}>
-                  <p style={{ color: "white" }}>{item.username}</p>
-                </button>
-              </div>
-            ))}
-          </div>
+          <div className="User-Container">
+            <div className="User-Scroll">
+              {userList.map((item, index) => (
+                <div key={index}>
+                  <button className="User-Btn" onClick={() => gotoUser(item)}>
+                    <p style={{ color: "white" }}>{item.username}</p>
+                  </button>
+                </div>
+              ))}
+            </div>
+            </div>
         )}
-        <div>
-            <button
-              onClick={() => {
-                handleNextPage(false);
-              }}
-            >
-              -
-            </button>
-            <text style={{ color: "white", padding: 10 }}>{curPage}</text>
-            <button
-              onClick={() => {
-                handleNextPage(true);
-              }}
-            >
-              +
-            </button>
-          </div>
-      </div>
       {typeSearch ? (
         <>
-          <div>
+          <div style={{ padding: 15 }}>
             <button
               onClick={() => {
                 handleNextPage(false);
               }}
             >
-              -
+              <NavigateBeforeRounded />
             </button>
-            <text style={{ color: "white", padding: 10 }}>{curPage}</text>
+            <text className="Page-Btn-Text">{curPage}</text>
             <button
               onClick={() => {
                 handleNextPage(true);
               }}
             >
-              +
+              <NavigateNextRounded />
             </button>
           </div>
         </>

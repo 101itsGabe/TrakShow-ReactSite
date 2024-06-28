@@ -52,6 +52,10 @@ export const SignIn = ({ setCurUser, setUserShow }) => {
 
   return (
     <div>
+      <p style={{
+        fontSize: 32,
+        color: "white"
+      }}>Welcome!</p>
       <div style={{ display: "inline-block" }}>
         <div style={{ display: "inline-block" }}>
           <p style={{color: "white"}}>Email</p>

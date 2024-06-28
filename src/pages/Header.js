@@ -46,9 +46,9 @@ export const Header = ({user, setUser}) => {
     <>
     <div className="Header">
       <div className="header-btn">
+        <button onClick={()=>{navToSearch(false)}}>Search</button>
         <button
         onClick={()=>{navToShows(false)}}>My Shows</button>
-        <button onClick={()=>{navToSearch(false)}}>Search</button>
         <button onClick={()=>{navToFeed(false)}}>My Feed</button>
         <button onClick={()=>{navToSignin(false)}}>SignOut</button>
       </div>

@@ -39,14 +39,14 @@ export const AddCommentPage = ({ user, setAddComment, post, handleAddComment }) 
           checked={!hasSpoilers}
           onChange={() => setSpoilers(false)}
         />
-        <label for="notSpoilers">Spoiler-Free</label>
+        <label style={{color: "white"}}for="notSpoilers">Spoiler-Free</label>
         <input
           type="radio"
           id="Spoilers"
           checked={hasSpoilers}
           onChange={() => setSpoilers(true)}
         />
-        <label for="notSpoilers">Contain Spoilers</label>
+        <label style={{color: "white"}}for="notSpoilers">Contain Spoilers</label>
       </div>
 
       <button onClick={Replybtn}className="Reply-Btn">Reply</button>

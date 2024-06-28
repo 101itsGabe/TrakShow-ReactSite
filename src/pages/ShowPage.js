@@ -77,6 +77,7 @@ export const ShowPage = ({ user, setUserShows }) => {
   }, [episodes, showID]);
 
   const changeEp = async (item) => {
+    console.log("hehe?")
     if (isAdded) {
       const index = episodes.findIndex(
         (ep) => item.number == ep.number && item.season == ep.season
@@ -98,51 +99,46 @@ export const ShowPage = ({ user, setUserShows }) => {
     <div>
       {curShow != null && (
         <>
-          <p>{user.email}</p>
-          <div>
-            <img src={curShow.image.original} width={300} height={350}></img>
-            <div style={{ flexDirection: "row", color:"white" }}>
-              <p style={{ marginLeft: 20, color: "white" }}>{curShow.name}</p>
-              <p style={{ marginLeft: 20, color: "white" }}>{curShow.status}</p>
-              <p style={{ marginLeft: 20, color: "white" }}>{curShow.rating.average}/10</p>
-              <p style={{color: "white"}}>{showDesc}</p>
-              <p>{episodes.length}</p>
-            </div>
-          </div>
+          <div className="Show-Page">
+            <img src={curShow.image.original}></img>
+            <div>
+              <p style={{fontSize: 20, fontWeight: "bold"}}>{curShow.name}</p>
+              <p >{curShow.status}</p>
+              <p >{curShow.rating.average}/10</p>
+              <p className="Show-Desc" >{showDesc}</p>
+              <p >Episode length: {episodes.length}</p>
+
           <div class="Ep-Scroll">
             {episodes.map((item, index) => (
-              <div
-                onClick={() => {
-                  changeEp(item);
-                }}
-              >
+
                 <div
                   onClick={() => {
                     changeEp(item);
                   }}
-                  style={{ display: "inline-block" }}
+                  
                 >
                   <div>
-                    <p style={{ display: "inline", marginRight: "10px", color: "white" }}>
+                    <p>
                       Season: {item.season}
                     </p>
-                    <p style={{ display: "inline", marginRight: "10px", color:"white" }}>
+                    <p>
                       Episode: {item.number}
                     </p>
-                    <p style={{ display: "inline", color: "white" }}>{item.name}</p>
+                    <p>{item.name}</p>
                   </div>
                 </div>
-              </div>
             ))}
           </div>
           {isAdded ? (
-            <div>
+            <div style={{padding: 10}}>
               <p style={{color: "white"}}>Season: {curSeason} </p>
               <p style={{color: "white"}}> Ep: {curEp}</p>
             </div>
           ) : (
             <button onClick={btnAddShow} className="header-btn">Add Show +</button>
           )}
+          </div>
+          </div>
         </>
       )}
     </div>

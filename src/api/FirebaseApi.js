@@ -15,7 +15,7 @@ import {
   getDoc,
   doc,
   limitToLast,
-  endAt
+  endAt,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -26,7 +26,6 @@ import {
   setPersistence,
   browserLocalPersistence,
   onAuthStateChanged,
-
 } from "firebase/auth";
 import { addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
@@ -57,18 +56,16 @@ setPersistence(auth, browserLocalPersistence)
     console.error("Error setting persistence:", error);
   });
 
-
-export async function getCurUser(email){
+export async function getCurUser(email) {
   const userCollection = collection(db, "Users");
-    const q = query(userCollection, where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    if(!querySnapshot.empty){
-      const doc = querySnapshot.docs[0];
-      return doc.data();
-    }
-    else{
-      return null;
-    }
+  const q = query(userCollection, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const doc = querySnapshot.docs[0];
+    return doc.data();
+  } else {
+    return null;
+  }
 }
 export async function getUsers() {
   const usersCollection = collection(db, "Users");
@@ -126,13 +123,12 @@ export async function emailSignIn(email, password) {
     const userCollection = collection(db, "Users");
     const q = query(userCollection, where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
-    if(!querySnapshot.empty){
+    if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
       const userData = doc.data();
       return userData;
-    }
-    else{
-       return null;
+    } else {
+      return null;
     }
 
     // Return the email value once it's available
@@ -284,117 +280,114 @@ export async function isShowAdded(email, curShow) {
   return false; // Return false if the show is not found
 }
 
-export async function addComment(id, comment, email, isSpoiler){
-  try{
-  const feedCollection = collection(db, "UserFeed");
-  const feedQ = query(feedCollection, where("id", "==", id));
-  const feedSnapshot = await getDocs(feedQ);
-  if(!feedSnapshot.empty){
-    const feedDoc = feedSnapshot.docs[0]
-    const commentCollection = collection(feedDoc.ref, "commentList");
-    const docRef = await addDoc(commentCollection, {
-      comment: comment,
-      email: email,
-      isSpoiler: isSpoiler,
-    });
-    
-    // Now that the document is created, update the document with the ID
-    const newDoc = {
-      comment: comment,
-      email: email,
-      isSpoiler: isSpoiler,
-      id: docRef.id
-    };
+export async function addComment(id, comment, email, isSpoiler) {
+  try {
+    const feedCollection = collection(db, "UserFeed");
+    const feedQ = query(feedCollection, where("id", "==", id));
+    const feedSnapshot = await getDocs(feedQ);
+    if (!feedSnapshot.empty) {
+      const feedDoc = feedSnapshot.docs[0];
+      const commentCollection = collection(feedDoc.ref, "commentList");
+      const docRef = await addDoc(commentCollection, {
+        comment: comment,
+        email: email,
+        isSpoiler: isSpoiler,
+      });
 
-    // Optionally, update the document in Firestore to include the ID
-    await setDoc(docRef, newDoc, { merge: true });
+      // Now that the document is created, update the document with the ID
+      const newDoc = {
+        comment: comment,
+        email: email,
+        isSpoiler: isSpoiler,
+        id: docRef.id,
+      };
 
-    return newDoc;
+      // Optionally, update the document in Firestore to include the ID
+      await setDoc(docRef, newDoc, { merge: true });
+
+      return newDoc;
+    }
+  } catch (error) {
+    console.log(error.message);
   }
-}catch(error){
-  console.log(error.message);
-}
 }
 
-export async function getComments(id){
+export async function getComments(id) {
   const feedCollection = collection(db, "UserFeed");
   const feedQ = query(feedCollection, where("id", "==", id));
   const feedSnapshot = await getDocs(feedQ);
-  let commentList = []
-  let post = null
+  let commentList = [];
+  let post = null;
 
-  if(!feedSnapshot.empty){
-    const feedDoc = feedSnapshot.docs[0]
+  if (!feedSnapshot.empty) {
+    const feedDoc = feedSnapshot.docs[0];
     post = feedDoc.data();
     const commentCollection = collection(feedDoc.ref, "commentList");
-    const commentsSnapshop = await getDocs(commentCollection)
-    commentsSnapshop.docs.forEach(doc => {
+    const commentsSnapshop = await getDocs(commentCollection);
+    commentsSnapshop.docs.forEach((doc) => {
       commentList.push(doc.data());
+    });
+  }
 
-    })
-  };
-
-  return {post,commentList};
+  return { post, commentList };
 }
 
-export async function deleteComment(postID, commentID){
+export async function deleteComment(postID, commentID) {
   const feedCollection = collection(db, "UserFeed");
   const feedQ = query(feedCollection, where("id", "==", postID));
   const feedSnapshot = await getDocs(feedQ);
-  if(!feedSnapshot.empty){
-    const feedDoc = feedSnapshot.docs[0]
+  if (!feedSnapshot.empty) {
+    const feedDoc = feedSnapshot.docs[0];
     const commentCollection = collection(feedDoc.ref, "commentList");
-    const docQ = query(commentCollection, where("id", "==", commentID))
+    const docQ = query(commentCollection, where("id", "==", commentID));
     const commentSnapshot = await getDocs(docQ);
-    if(!commentSnapshot.empty){
+    if (!commentSnapshot.empty) {
       const doc = commentSnapshot.docs[0];
-      await deleteDoc(doc.ref)
+      await deleteDoc(doc.ref);
     }
   }
 }
 
 export async function addLike(email, post) {
-  try{
-  const feedCollection = collection(db, "UserFeed");
-  const feedQ = query(feedCollection, where("id","==",post.id));
-  const feedSnapshot = await getDocs(feedQ);
-  if(!feedSnapshot.empty){
-    const likesDoc = feedSnapshot.docs[0];
-    const likeCollection = collection(likesDoc.ref,"likeList");
-    const likeQ = query(likeCollection, where("email","==",email));
-    const likesSnapshot = await getDocs(likeQ);
-    if(!likesSnapshot.empty){
-      const likeDoc = likesSnapshot.docs[0];
-      await updateDoc(likesDoc.ref, {
-        likes: likesDoc.data().likes - 1
-      });
-      await deleteDoc(likeDoc.ref)
-    }else{
-      await addDoc(likeCollection,{
-        email: email
-      })
-      // Increment the likes count on the post document
-      await updateDoc(likesDoc.ref, {
-        likes: likesDoc.data().likes + 1
-      });
+  try {
+    const feedCollection = collection(db, "UserFeed");
+    const feedQ = query(feedCollection, where("id", "==", post.id));
+    const feedSnapshot = await getDocs(feedQ);
+    if (!feedSnapshot.empty) {
+      const likesDoc = feedSnapshot.docs[0];
+      const likeCollection = collection(likesDoc.ref, "likeList");
+      const likeQ = query(likeCollection, where("email", "==", email));
+      const likesSnapshot = await getDocs(likeQ);
+      if (!likesSnapshot.empty) {
+        const likeDoc = likesSnapshot.docs[0];
+        await updateDoc(likesDoc.ref, {
+          likes: likesDoc.data().likes - 1,
+        });
+        await deleteDoc(likeDoc.ref);
+      } else {
+        await addDoc(likeCollection, {
+          email: email,
+        });
+        // Increment the likes count on the post document
+        await updateDoc(likesDoc.ref, {
+          likes: likesDoc.data().likes + 1,
+        });
+      }
+
+      const updatedSnapshot = await getDocs(feedQ);
+      const updatedDoc = updatedSnapshot.docs[0];
+
+      console.log("Post going out");
+      console.log(updatedDoc.data());
+      return updatedDoc.data();
     }
-
-    const updatedSnapshot = await getDocs(feedQ);
-    const updatedDoc = updatedSnapshot.docs[0];
-
-
-    console.log("Post going out");
-    console.log(updatedDoc.data())
-    return updatedDoc.data();
-
-
+  } catch (error) {
+    console.log(error.message);
   }
-}catch(error){
-  console.log(error.message);
-}
 }
 
-export async function followUser(email, followingEmail) {
+//Following Logic
+export async function followUser(email, followingEmail, followingUsername) {
   const usersCollection = collection(db, "Users");
   const q = query(usersCollection, where("email", "==", email));
   const querySnapshot = await getDocs(q);
@@ -404,6 +397,7 @@ export async function followUser(email, followingEmail) {
     const followingCollection = collection(userDoc.ref, "following");
     await addDoc(followingCollection, {
       userEmail: followingEmail,
+      username: followingUsername
     });
   }
 
@@ -433,10 +427,8 @@ export async function checkIfFollowing(email, followingEmail) {
     const querySnapshot = await getDocs(followeDoc);
     if (!querySnapshot.empty) {
       // Following email exists in the collection
-      console.log(true);
       return true;
     } else {
-      console.log(false);
       // Following email does not exist in the collection
       return false;
     }
@@ -478,40 +470,94 @@ export async function unfollowUser(email, followingEmail) {
   }
 }
 
-export async function getFeed(lastDoc = null) {
+export async function getFollowingList(email) {
+  try {
+    const usersCollection = collection(db, "Users");
+    const q = query(usersCollection, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    let followList = [];
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0]; // Assuming email is unique, take the first result
+      const followingCollection = collection(userDoc.ref, "following");
+      const followingSnapshot = await getDocs(followingCollection);
+      if (!followingSnapshot.empty) {
+        followingSnapshot.forEach((doc) => {
+          if (doc != null) {
+            followList.push(doc.data());
+          }
+        });
+      }
+    }
+    return followList;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export async function getFeed(lastDoc = null, getFollowing, email) {
   const feedCollection = collection(db, "UserFeed");
   let feedList = [];
   let feedQuery = null;
   let ifMore = false;
- 
-  if (lastDoc) {
-    const lastDocRef = doc(feedCollection,lastDoc.id)
-    const lastDocData = await getDoc(lastDocRef);
-    feedQuery = query(feedCollection, orderBy("timestamp", "desc"), startAfter(lastDocData), limit(5))
-    ifMore = true;
+
+  if (getFollowing === false) {
+    if (lastDoc) {
+      const lastDocRef = doc(feedCollection, lastDoc.id);
+      const lastDocData = await getDoc(lastDocRef);
+      feedQuery = query(
+        feedCollection,
+        orderBy("timestamp", "desc"),
+        startAfter(lastDocData),
+        limit(5)
+      );
+      ifMore = true;
+    } else {
+      feedQuery = query(feedCollection, orderBy("timestamp", "desc"), limit(5));
+    }
   } else {
-    feedQuery = query(feedCollection, orderBy("timestamp", "desc"), limit(5));
+    const followingList = await getFollowingList(email);
+    const userEmails = followingList
+      .filter(
+        (following) =>
+          following.userEmail !== null && following.userEmail !== undefined
+      )
+      .map((following) => following.userEmail);
+    if (lastDoc) {
+      const lastDocRef = doc(feedCollection, lastDoc.id);
+      const lastDocData = await getDoc(lastDocRef);
+      feedQuery = query(
+        feedCollection,
+        orderBy("timestamp", "desc"),
+        startAfter(lastDocData),
+        where("email", "in", userEmails),
+        limit(5)
+      );
+      ifMore = true;
+    } else {
+      feedQuery = query(
+        feedCollection,
+        where("email", "in",userEmails),
+        orderBy("timestamp", "desc"),
+        limit(5)
+      );
+    }
   }
 
   const feedSnapshot = await getDocs(feedQuery);
-  if(!feedSnapshot.empty){
-  feedSnapshot.forEach(async (doc) => {
-    try {
-      let data = doc.data();
-      feedList.push(data);
-    } catch (error) {
-      console.og("Error");
-    }
-  });
-}
-else{
-  console.log("its empty")
-}
-
-
-
+  if (!feedSnapshot.empty) {
+    feedSnapshot.forEach(async (doc) => {
+      try {
+        let data = doc.data();
+        feedList.push(data);
+      } catch (error) {
+        console.og("Error");
+      }
+    });
+  } else {
+    console.log("its empty");
+    return feedList
+  }
   return feedList;
-  
 }
 
 export async function addShow(email, curShow, epName) {
@@ -583,12 +629,9 @@ export async function addPost(email, show, ep) {
     //await addDoc(subCollectionRef, {});
     const commentCollection = collection(docRef, "commentList");
     //await addDoc(commentCollection,{})
-
   } catch (error) {
     console.error("Error adding post:", error);
   }
 }
-
-
 
 export { app, analytics, db };
