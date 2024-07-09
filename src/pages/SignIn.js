@@ -54,9 +54,10 @@ export const SignIn = ({ setCurUser, setUserShow }) => {
     <div>
       <p style={{
         fontSize: 32,
-        color: "white"
+        color: "white",
+        fontWeight: "bold",
       }}>Welcome!</p>
-      <div style={{ display: "inline-block" }}>
+      <div className="sign-in-input">
         <div style={{ display: "inline-block" }}>
           <p style={{color: "white"}}>Email</p>
           <input type="text" value={email} onChange={(e) =>{
