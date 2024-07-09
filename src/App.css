@@ -1,6 +1,13 @@
+:root {
+  --main-bg-color: #213a61;
+  --accent-btn-color: #305080;
+  --user-show-color: #e7d2a1;
+}
+
 .App {
   text-align: center;
   max-height: 100%;
+  background-color: #213a61;
 }
 
 .App button{
@@ -27,7 +34,7 @@
 .Comment-Item {
   border: 2px solid white; /* Correctly set the border property */
   border-radius: 10px;
-  background-color: #b23c3c81;
+  background-color: var(--accent-btn-color);
   width: 80%;
   height: auto; /* Adjust height to fit content */
   padding: 20px;
@@ -41,7 +48,7 @@
 }
 
 .App-header {
-  background-color: #5d0c0c;
+  background-color: #12294b;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -81,7 +88,7 @@
 }
 
 .Search-Scroll div button:hover{
-  background-color: #e0e0e070;
+  background-color: #e0e0e058;
 }
 
 .Search-Scroll div button img {
@@ -117,7 +124,7 @@
 
 .Menu-bar {
   display: none;
-  background-color: #753a3ad3;
+  background-color: #12294b;
   width: 250px;
   height: 100%;
   display: flex;
@@ -156,8 +163,17 @@
 }
 
 .Header {
-  justify-content: space-between;
+  display: flex;
+  justify-content: left;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.693);
+  padding: 10px 10px;
+  gap: 50px;
+}
+
+.Header img {
+    padding-left: 0px;
+    flex-grow: 0.5; /* This will push the buttons to the center */
 }
 
 .Header button {
@@ -245,7 +261,7 @@
 }
 
 .Finished-Scroll div{
-  background-color: #f1e3c2f7;
+  background-color: var(--user-show-color);
   border-radius: 10px;
   padding: 5px;
 }
@@ -254,7 +270,7 @@
   border-radius: 10px;
 }
 .Finished-Scroll div p{
-  background-color: #f1e3c2f7;
+  background-color: var(--user-show-color);
   border-radius: 10px;
   padding: 5px;
   font-size: 18px;
@@ -270,7 +286,7 @@
 }
 
 .Show-Scroll div {
-  background-color: #f1e3c2f7;
+  background-color: var(--user-show-color);
   color: #1c1c1ce4;
   border-radius: 10px;
 }
@@ -357,7 +373,7 @@
   box-sizing: border-box;
   /* Ensure padding and border are included in the element's total width and height */
   font-size: 20px;
-  background-color: #753a3ad3;
+  background-color: #305080;
   color: white;
   margin: 15px;
 }
@@ -376,21 +392,55 @@
   background-color: #d0d0d0;
 }
 
-.header-btn{
+.header-btn-search{
+  display: flex; /* Ensure that the flex display is set */
+  gap: 10px; /* This will add space between the buttons */
+  justify-content: center;align-self: center;
   padding-top: 2px;
   padding-bottom: 6px;
+}
+
+.header-btn-search button{
+  padding: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: whitesmoke;
+  margin-bottom: 5px;
+  background-color: transparent;
+  border: transparent;
+}
+
+.header-btn-search button:hover{
+    border-radius: 10px;
+    background-color: #3c4f6bbf;
+}
+
+.header-btn{
+  display: flex; /* Ensure that the flex display is set */
+  gap: 10px; /* This will add space between the buttons */
+  padding-top: 2px;
+  padding-bottom: 6px;
+  transition: background-color 0.05s ease, transform 0.05s ease; 
 }
 
 .header-btn button {
   padding: 40px;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: #f1e3c2f7;
-  border-radius: 10px;
   font-size: 16px;
   font-weight: bold;
-  color: #1c1c1ce4;
+  color: whitesmoke;
   margin-bottom: 5px;
+  background-color: transparent;
+  border: transparent;
+}
+
+.header-btn button:hover{
+  border-radius: 10px;
+  background-color: #3c4f6bbf;
+
 }
 
 .Add-Comment-Background {
@@ -437,7 +487,7 @@
   height: 10%;
   left: 30%;
   top: 5%;
-  background-color: #753a3ad3;
+  background-color: #2c4770;
   border-radius: 10px;
   color: white;
   font-size: 16px;
@@ -493,7 +543,7 @@
   display: flex;
   flex-direction: row; 
   padding-top: 30;
-  background-color: #b23c3c81;
+  background-color: var(--accent-btn-color);
   border-radius: 10px;
   padding: 20px;
   gap: 30px;
@@ -569,7 +619,7 @@
     box-sizing: border-box;
     /* Ensure padding and border are included in the element's total width and height */
     font-size: 16px;
-    background-color: #753a3ad3;
+    background-color: #305080;
     color: white
   }
 

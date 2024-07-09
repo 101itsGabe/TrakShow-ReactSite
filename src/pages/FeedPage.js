@@ -55,7 +55,6 @@ export const FeedPage = ({ user }) => {
       if(feedList.length !== 0){
         const lastDoc = feedList[feedList.length - 1];
         const moreFeed = await getFeed(lastDoc, false, user.email);
-        console.log(moreFeed)
         setFeed([...feedList, ...moreFeed]);
         if(moreFeed.length < 5 || moreFeed === null){
           setHasMore(false);
@@ -66,7 +65,7 @@ export const FeedPage = ({ user }) => {
       if(followingFeed.length !== 0){
       const lastDoc = followingFeed[followingFeed.length - 1];
         const moreFeed = await getFeed(lastDoc, true, user.email);
-        console.log(moreFeed)
+        console.log("This is following feed", moreFeed)
         setFollowingFeed([...followingFeed, ...moreFeed]);
         if(moreFeed.length < 5){
           console.log("HA");
@@ -83,19 +82,18 @@ export const FeedPage = ({ user }) => {
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        if(feedList.length === 0){
+        if(followingFeed.length === 0){
         const feed = await getFeed(null,true,user.email);
         console.log(feed);
-        if(feed.length <= 0){
-          setHasMore(false)
+        if(feed.length <= 5 && pulled === false){
+          setFollowingMore(false)
         }
         setFollowingFeed(feed);
         }
-        if(followingFeed.length === 0){
+        if(feedList.length === 0 && pulled === false){
         const fullFeed = await getFeed(null, false, user.email);
-        console.log(fullFeed);
-        if(fullFeed <= 0){
-          setFollowingMore(false);
+        if(fullFeed <= 5){
+          setHasMore(false);
         }
         setFeed(fullFeed);
         setPulled(true);

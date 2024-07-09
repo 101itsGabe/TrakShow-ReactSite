@@ -120,7 +120,7 @@ export const SearchPage = ({ user }) => {
         className="search-bar"
       />
 
-      <div className="header-btn">
+      <div className="header-btn-search">
         <button onClick={() => handleType(true)}>Shows</button>
         <button onClick={() => handleType(false)}>Users</button>
       </div>
