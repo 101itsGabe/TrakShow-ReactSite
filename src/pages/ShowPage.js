@@ -1,12 +1,17 @@
 import { useAsyncError, useParams, useLocation } from "react-router-dom";
 import { getShow, getSearch, getEps } from "../api/TVShowApi";
 import React, { useEffect, useState } from "react";
-import { addShow, deleteShow, getUserShows, isShowAdded, updateEp } from "../api/FirebaseApi";
+import {
+  addShow,
+  deleteShow,
+  getUserShows,
+  isShowAdded,
+  updateEp,
+} from "../api/FirebaseApi";
 import "../App.css";
-import {Header} from "../pages/Header";
+import { Header } from "../pages/Header";
 
 export const ShowPage = ({ user, setUserShows }) => {
-  const [Show, setShow] = useState(null);
   const [curShow, setCurShow] = useState(null); // State for current show
   const [episodes, setEpisodes] = useState([]); // State for episodes
   const [showName, setName] = useState("");
@@ -28,7 +33,7 @@ export const ShowPage = ({ user, setUserShows }) => {
     try {
       if (user != null && curShow != null) {
         await addShow(user.email, curShow, episodes[0].name);
-        const username = user.username
+        const username = user.username;
         const shows = await getUserShows(username);
         setUserShows(shows);
         setIsAdded(true);
@@ -77,19 +82,19 @@ export const ShowPage = ({ user, setUserShows }) => {
   }, [episodes, showID]);
 
   const changeEp = async (item) => {
-    console.log("hehe?")
+    console.log("hehe?");
     if (isAdded) {
       const index = episodes.findIndex(
         (ep) => item.number == ep.number && item.season == ep.season
       );
-      try{
-      await updateEp(user.email, curShow, item, index);
-      setEp(item.number);
-      setSeason(item.season);
-      const username = user.username
-      const shows = await getUserShows(username);
-      setUserShows(shows);
-      }catch(error){
+      try {
+        await updateEp(user.email, curShow, item, index);
+        setEp(item.number);
+        setSeason(item.season);
+        const username = user.username;
+        const shows = await getUserShows(username);
+        setUserShows(shows);
+      } catch (error) {
         console.log(error.message);
       }
     }
@@ -102,42 +107,38 @@ export const ShowPage = ({ user, setUserShows }) => {
           <div className="Show-Page">
             <img src={curShow.image.original}></img>
             <div>
-              <p style={{fontSize: 20, fontWeight: "bold"}}>{curShow.name}</p>
-              <p >{curShow.status}</p>
-              <p >{curShow.rating.average}/10</p>
-              <p className="Show-Desc" >{showDesc}</p>
-              <p >Episode length: {episodes.length}</p>
+              <p style={{ fontSize: 20, fontWeight: "bold" }}>{curShow.name}</p>
+              <p>{curShow.status}</p>
+              <p>{curShow.rating.average}/10</p>
+              <p className="Show-Desc">{showDesc}</p>
+              <p>Episode length: {episodes.length}</p>
 
-          <div class="Ep-Scroll">
-            {episodes.map((item, index) => (
-
-                <div
-                  onClick={() => {
-                    changeEp(item);
-                  }}
-                  
-                >
-                  <div>
-                    <p>
-                      Season: {item.season}
-                    </p>
-                    <p>
-                      Episode: {item.number}
-                    </p>
-                    <p>{item.name}</p>
+              <div class="Ep-Scroll">
+                {episodes.map((item, index) => (
+                  <div
+                    onClick={() => {
+                      changeEp(item);
+                    }}
+                  >
+                    <div>
+                      <p>Season: {item.season}</p>
+                      <p>Episode: {item.number}</p>
+                      <p>{item.name}</p>
+                    </div>
                   </div>
+                ))}
+              </div>
+              {isAdded ? (
+                <div style={{ padding: 10 }}>
+                  <p style={{ color: "white" }}>Season: {curSeason} </p>
+                  <p style={{ color: "white" }}> Ep: {curEp}</p>
                 </div>
-            ))}
-          </div>
-          {isAdded ? (
-            <div style={{padding: 10}}>
-              <p style={{color: "white"}}>Season: {curSeason} </p>
-              <p style={{color: "white"}}> Ep: {curEp}</p>
+              ) : (
+                <button onClick={btnAddShow} className="header-btn">
+                  Add Show +
+                </button>
+              )}
             </div>
-          ) : (
-            <button onClick={btnAddShow} className="header-btn">Add Show +</button>
-          )}
-          </div>
           </div>
         </>
       )}

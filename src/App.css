@@ -1,7 +1,7 @@
 :root {
   --main-bg-color: #213a61;
   --accent-btn-color: #305080;
-  --user-show-color: #e7d2a1;
+  --user-show-color: lightgray;
 }
 
 .App {
@@ -10,7 +10,7 @@
   background-color: #213a61;
 }
 
-.App button{
+.App button {
   cursor: pointer;
 }
 
@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 
-.Comment-List-Container{
+.Comment-List-Container {
   max-height: calc(100vh - 180px); /* Set the maximum height */
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 10px;
@@ -84,10 +84,10 @@
   /* Remove the default border */
   border-radius: 10px;
   border-width: 1px;
-  transition: background-color 0.05s ease, transform 0.05s ease; 
+  transition: background-color 0.05s ease, transform 0.05s ease;
 }
 
-.Search-Scroll div button:hover{
+.Search-Scroll div button:hover {
   background-color: #e0e0e058;
 }
 
@@ -172,15 +172,15 @@
 }
 
 .Header img {
-    padding-left: 0px;
-    flex-grow: 0.5; /* This will push the buttons to the center */
+  padding-left: 0px;
+  flex-grow: 0.5; /* This will push the buttons to the center */
 }
 
 .Header button {
   cursor: pointer;
 }
 
-.Show-Page{
+.Show-Page {
   display: grid;
   grid-template-columns: 1fr 2fr; /* 1/3 of the space for the image, 2/3 for the info */
   gap: 5px; /* Space between the image and the info */
@@ -188,13 +188,11 @@
   align-items: center; /* Vertically center the items */
 }
 
-.Show-Page div{
+.Show-Page div {
   color: white;
-
-  
 }
 
-.Show-Page img{
+.Show-Page img {
   padding: 30px;
   border-radius: 45px;
   max-width: 100%;
@@ -216,13 +214,13 @@
   border: 2px solid #d0d0d0;
 }
 
-.Ep-Scroll div{
+.Ep-Scroll div {
   padding: 2px;
   cursor: pointer;
-  transition: background-color 0.1s ease, transform 0.1s ease; 
+  transition: background-color 0.1s ease, transform 0.1s ease;
 }
 
-.Ep-Scroll div:hover{
+.Ep-Scroll div:hover {
   background-color: #e0e0e070;
 }
 
@@ -237,7 +235,6 @@
   padding: 10px;
   max-height: calc(100vh - 50px);
   box-sizing: border-box;
-
 }
 
 .Google-Btn {
@@ -260,20 +257,21 @@
   justify-content: center; /* Center items horizontally */
 }
 
-.Finished-Scroll div{
+.Finished-Scroll div {
   background-color: var(--user-show-color);
   border-radius: 10px;
   padding: 5px;
 }
 
-.Finished-Scroll div img{
+.Finished-Scroll div img {
   border-radius: 10px;
 }
-.Finished-Scroll div p{
+.Finished-Scroll div p {
   background-color: var(--user-show-color);
   border-radius: 10px;
   padding: 5px;
   font-size: 18px;
+  font-weight: bold;
 }
 
 .Show-Scroll {
@@ -296,11 +294,12 @@
   border-radius: 10px;
 }
 
-.Show-Scroll div p{
+.Show-Scroll div p {
   font-size: 18px;
+  font-weight: bold;
 }
 
-.User-Content{
+.User-Content {
   display: flex;
   justify-content: center;
 }
@@ -310,12 +309,12 @@
   margin-left: auto;
 }
 
-.User-Scroll div{
+.User-Scroll div {
   cursor: pointer;
-  transition: background-color 0.1s ease, transform 0.1s ease; 
+  transition: background-color 0.1s ease, transform 0.1s ease;
 }
 
-.User-Scroll div:hover{
+.User-Scroll div:hover {
   background-color: #e0e0e070;
 }
 
@@ -331,7 +330,7 @@
   /* Optional, aligns text to the left */
 }
 
-.Show-Scroll>div {
+.Show-Scroll > div {
   flex: 0 0 calc(33.33% - 30px);
   /* Three items per row with some gap */
   max-width: calc(33.33% - 30px);
@@ -340,12 +339,12 @@
   /* Adjust margin as needed */
 }
 
-.sign-in-input{
+.sign-in-input {
   display: felx;
   flex-direction: column;
 }
 
-.sign-in-input div input{
+.sign-in-input div input {
   border-radius: 10px;
   width: 30%;
   height: 45px;
@@ -410,15 +409,16 @@
   background-color: #d0d0d0;
 }
 
-.header-btn-search{
+.header-btn-search {
   display: flex; /* Ensure that the flex display is set */
   gap: 10px; /* This will add space between the buttons */
-  justify-content: center;align-self: center;
+  justify-content: center;
+  align-self: center;
   padding-top: 2px;
   padding-bottom: 6px;
 }
 
-.header-btn-search button{
+.header-btn-search button {
   padding: 40px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -430,17 +430,17 @@
   border: transparent;
 }
 
-.header-btn-search button:hover{
-    border-radius: 10px;
-    background-color: #3c4f6bbf;
+.header-btn-search button:hover {
+  border-radius: 10px;
+  background-color: #3c4f6bbf;
 }
 
-.header-btn{
+.header-btn {
   display: flex; /* Ensure that the flex display is set */
   gap: 10px; /* This will add space between the buttons */
   padding-top: 2px;
   padding-bottom: 6px;
-  transition: background-color 0.05s ease, transform 0.05s ease; 
+  transition: background-color 0.05s ease, transform 0.05s ease;
 }
 
 .header-btn button {
@@ -455,10 +455,9 @@
   border: transparent;
 }
 
-.header-btn button:hover{
+.header-btn button:hover {
   border-radius: 10px;
   background-color: #3c4f6bbf;
-
 }
 
 .Add-Comment-Background {
@@ -485,8 +484,6 @@
   border-radius: 10px;
   position: relative; /* Relative positioning to position child elements */
 }
-
-
 
 .Add-Comment-Overlay-btn {
   position: absolute;
@@ -524,7 +521,7 @@
   color: white;
 }
 
-.Add-Comment-Overlay textarea{
+.Add-Comment-Overlay textarea {
   border-radius: 10px;
   position: inherit;
   width: 60%;
@@ -532,17 +529,17 @@
   font-size: 16px;
 }
 
-.radio-btn{
+.radio-btn {
   position: absolute;
   bottom: 10%;
   left: 0%;
 }
 
-.Delete-Btn{
+.Delete-Btn {
   cursor: pointer;
 }
 
-.Spoiler-Btn{
+.Spoiler-Btn {
   display: flex;
   direction: row;
   padding: 5px;
@@ -553,13 +550,11 @@
   align-items: center; /* Centers items vertically */
   gap: 5px; /* Optional: adds space between icon and text */
   position: relative;
-
 }
 
-
-.Users-Btn{
+.Users-Btn {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   padding-top: 30;
   background-color: var(--accent-btn-color);
   border-radius: 10px;
@@ -573,7 +568,7 @@
 
 .Users-Btn div {
   position: relative;
-  color: white
+  color: white;
 }
 
 .Users-Btn div:hover::after {
@@ -586,14 +581,12 @@
   background-color: white;
 }
 
-.Page-Btn-Text{
+.Page-Btn-Text {
   color: white;
   padding-top: 2%;
   padding: 10px;
   font-size: 20px;
 }
-
-
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {
@@ -608,23 +601,23 @@
     /* Optional: adjust font size */
   }
 
-  .Show-Page{
+  .Show-Page {
     display: flex;
     flex-direction: column;
   }
 
-.Show-Page img{
-  border-radius: 45px;
-  width: 60%;
-  height: 65%;
-}
+  .Show-Page img {
+    border-radius: 45px;
+    width: 60%;
+    height: 65%;
+  }
 
-  .Show-Scroll>div {
+  .Show-Scroll > div {
     flex: 0 0 calc(100% - 20px);
     /* One item per row on smaller screens */
     max-width: calc(100% - 20px);
   }
-  .Show-Scroll-Img{
+  .Show-Scroll-Img {
     border-color: transparent;
     background-color: transparent;
   }
@@ -638,7 +631,7 @@
     /* Ensure padding and border are included in the element's total width and height */
     font-size: 16px;
     background-color: #305080;
-    color: white
+    color: white;
   }
 
   .Menu-bar {
@@ -653,9 +646,9 @@
     display: none;
   }
 
-  .Add-Comment-Overlay{
-    width:90%;
-  height: 45%;
+  .Add-Comment-Overlay {
+    width: 90%;
+    height: 45%;
   }
 }
 

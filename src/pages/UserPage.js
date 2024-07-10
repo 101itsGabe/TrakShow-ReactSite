@@ -18,6 +18,8 @@ import {
   NavigateBeforeRounded,
 } from "@mui/icons-material";
 
+import { useCurAuth } from "../hooks/useAuth";
+
 export function UserPage({ user, userShows, setUserShows }) {
   const [shows, setShows] = useState([]); // Declare shows as a state variable
   const [finishedShows, setFinShow] = useState([]);
@@ -27,6 +29,7 @@ export function UserPage({ user, userShows, setUserShows }) {
   const [loading, setLoading] = useState(true);
   const [followerList, setFollowerList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
+  const { authUser, authLoading } = useCurAuth();
 
   const nav = useNavigate();
   const params = useParams();
@@ -36,37 +39,49 @@ export function UserPage({ user, userShows, setUserShows }) {
   useEffect(() => {
     let finShow = [];
     let notFin = [];
+
+    console.log("HELLO");
+
+    if (!authLoading) {
+      if (!authUser) {
+        console.log("rip buddy your guy is null");
+      } else {
+        console.log("maybe not");
+      }
+    }
+
     const fetchData = async () => {
       try {
         const username = user.username;
         let curShows;
-        if(shows.length === 0){
-        if (username === params.username) {
-          curShows = await getUserShows(username);
-          setMyShow(true);
-        } else {
-          curShows = await getUserShows(params.username);
+        if (shows.length === 0) {
+          if (username === params.username) {
+            curShows = await getUserShows(username);
+            setMyShow(true);
+          } else {
+            curShows = await getUserShows(params.username);
+            setMyShow(false);
+          }
         }
-      }
         //setShows(curShows); // Update shows state with fetched data
 
-        if(curShows !== null){
-        const allEpisodes = await Promise.all(
-          curShows.map(async (show) => {
-            const episodes = await getEps(show.id);
-            const lastEp = episodes[episodes.length - 1];
-            if (
-              //show.status === "Ended" &&
-              show.curSeason === lastEp.season &&
-              show.curEp === lastEp.number
-            ) {
-              finShow.push(show);
-            } else {
-              notFin.push(show);
-            }
-            return { show, episodes };
-          })
-        );
+        if (curShows !== null) {
+          const allEpisodes = await Promise.all(
+            curShows.map(async (show) => {
+              const episodes = await getEps(show.id);
+              const lastEp = episodes[episodes.length - 1];
+              if (
+                //show.status === "Ended" &&
+                show.curSeason === lastEp.season &&
+                show.curEp === lastEp.number
+              ) {
+                finShow.push(show);
+              } else {
+                notFin.push(show);
+              }
+              return { show, episodes };
+            })
+          );
         }
 
         setShows(notFin);
@@ -80,11 +95,11 @@ export function UserPage({ user, userShows, setUserShows }) {
           setFollowing(ifFollowing);
         }
 
-        if(followingList.length === 0){
-        const curFollow = await getFollowingList(user.email);
-        if (curFollow != null && followingList.length == 0) {
-          setFollowingList(curFollow);
-        }
+        if (followingList.length === 0) {
+          const curFollow = await getFollowingList(user.email);
+          if (curFollow != null && followingList.length == 0) {
+            setFollowingList(curFollow);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -93,8 +108,9 @@ export function UserPage({ user, userShows, setUserShows }) {
       }
     };
 
+    console.log("calling fetch");
     fetchData(); // Call fetchData inside useEffect
-  }, [user.email, params.username]); // Add user.email as a dependency
+  }, [authUser, authLoading]); // Add user.email as a dependency
 
   const handleType = (type) => {
     setType(type);
@@ -120,6 +136,12 @@ export function UserPage({ user, userShows, setUserShows }) {
       url += "&param2=" + curSeason;
     }
     nav(url);
+  };
+
+  const gotoUser = (curUser) => {
+    nav("/userpage/user/" + curUser.username, { state: { curUser } });
+    shows.length = 0;
+    setType(0);
   };
 
   const removeShow = async (show) => {
@@ -227,7 +249,7 @@ export function UserPage({ user, userShows, setUserShows }) {
         {shows.map((item, index) => (
           <div key={index}>
             <button
-            className="Show-Scroll-Img"
+              className="Show-Scroll-Img"
               onClick={() => gotopage(item.id, item.curEp, item.curSeason)}
             >
               <img src={item.imgUrl} alt={item.name} />
@@ -292,11 +314,11 @@ export function UserPage({ user, userShows, setUserShows }) {
                     }
                   >
                     <img src={item.imgUrl} alt={item.name} />
-                    </button>
-                    <div>
-                      <p>{item.name}</p>
-                    </div>
-                    {isMyShow &&(
+                  </button>
+                  <div>
+                    <p>{item.name}</p>
+                  </div>
+                  {isMyShow && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -305,13 +327,15 @@ export function UserPage({ user, userShows, setUserShows }) {
                     >
                       Delete
                     </button>
-                    )}
+                  )}
                 </div>
               ))}
             </div>
           </div>
         ) : (
-          <p style={{color: "white", fontSize: 16}}>No finished shows to display.</p>
+          <p style={{ color: "white", fontSize: 16 }}>
+            No finished shows to display.
+          </p>
         )}
       </div>
     </div>
@@ -321,7 +345,9 @@ export function UserPage({ user, userShows, setUserShows }) {
     <div>
       {followingList.map((item, index) => (
         <div key={index}>
-          <p style={{ color: "white" }}>{item.username}</p>
+          <button className="User-Btn" onClick={() => gotoUser(item)}>
+            <p style={{ color: "white" }}>{item.username}</p>
+          </button>
         </div>
       ))}
     </div>
@@ -349,9 +375,11 @@ export function UserPage({ user, userShows, setUserShows }) {
           <div className="Users-Btn">
             <div onClick={() => handleType(0)}>Currently Watching</div>
             <div onClick={() => handleType(1)}>Finished Shows</div>
-            {user.username === params.username && <>
-            <div onClick={() => handleType(2)}>Follow List</div></>}
-
+            {user.username === params.username && (
+              <>
+                <div onClick={() => handleType(2)}>Follow List</div>
+              </>
+            )}
           </div>
           {renderContent()}
         </>
