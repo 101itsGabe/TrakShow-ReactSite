@@ -238,13 +238,13 @@
 }
 
 .Google-Btn {
-  background-color: #f1e3c2f7;
+  background-color: var(--user-show-color);
   padding: 10px;
   border-radius: 10px;
   /* Round the button */
   font-size: 16px;
   /* Increase the font size */
-  color: #1c1c1ce4;
+  color: black;
   /* Text color */
   border: none;
   /* Remove default border */
@@ -339,22 +339,22 @@
   /* Adjust margin as needed */
 }
 
-.sign-in-input {
-  display: felx;
-  flex-direction: column;
-}
 
+.sign-in-input {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+}
 .sign-in-input div input {
   border-radius: 10px;
-  width: 30%;
-  height: 45px;
-  padding: 10px;
-  box-sizing: border-box;
+  padding: 15px;
+  height: 10px;
   /* Ensure padding and border are included in the element's total width and height */
   font-size: 20px;
   background-color: #305080;
   color: white;
-  margin: 15px;
 }
 
 .sign-up-container {
@@ -590,6 +590,21 @@
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {
+
+  .sign-in{
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-align items horizontally */
+    padding: 20px; /* Adjust padding as needed */
+  }
+
+  .sign-in img{
+    width: 80%;
+  }
+
+  .sign-in-input div input{
+    width: 100%;
+  }
   .sign-up-container input {
     margin-bottom: 10px;
     /* Add space between inputs */
