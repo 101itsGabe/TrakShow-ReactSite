@@ -7,8 +7,9 @@ import { BeatLoader } from 'react-spinners';
 import { ThumbUpAlt, Comment, ThumbUpOffAlt } from "@mui/icons-material";
 import { getDefaultNormalizer } from "@testing-library/react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/userContext"
 
-export const FeedPage = ({ user }) => {
+export const FeedPage = () => {
   const [followingFeed,setFollowingFeed] = useState([])
   const [feedList, setFeed] = useState([]);
   const [feedHasMore, setHasMore] = useState(true);
@@ -16,6 +17,7 @@ export const FeedPage = ({ user }) => {
   const [feedType, setType] = useState(false);
   const [pulled,setPulled] = useState(false)
   const nav = useNavigate();
+  const user = useUser().user;
 
   const addLikeBtn = async (post) => {
     //console.log(post);
@@ -103,11 +105,11 @@ export const FeedPage = ({ user }) => {
       }
     };
 
-    if(pulled === false){
+    if(pulled === false && user){
     fetchFeed();
     }
 
-  }, [feedList]);
+  }, [feedList, user]);
 
   return (
     <div>

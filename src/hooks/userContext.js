@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getCurUser } from "../api/FirebaseApi";
+import { getCurUser } from "../api/FirebaseApi"
 
-export const useCurAuth = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add a loading state
+export const UserContext = createContext();
+
+export const UserProvider = ({children}) => {
+    const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     const auth = getAuth();
@@ -15,26 +17,26 @@ export const useCurAuth = () => {
         setUser(curUserData);
       } catch (error) {
         console.log(error.message);
-      } finally {
-        setLoading(false); // Set loading to false after fetching data
       }
     };
 
     const unsubscribe = onAuthStateChanged(auth, (curUser) => {
-      console.log("unsubscribing?")
       if (curUser) {
         fetchUserData(curUser.email);
       } else {
         setUser(null);
-        setLoading(false); // Set loading to false if no user is logged in
       }
+      setAuthLoading(false);
     });
 
-    // Clean up subscription on unmount
     return () => unsubscribe();
   }, []);
 
-  console.log("inside Auth", user);
-
-  return { user, loading };
+  return (
+    <UserContext.Provider value={{ user, setUser, authLoading }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
+
+export const useUser = () => useContext(UserContext);

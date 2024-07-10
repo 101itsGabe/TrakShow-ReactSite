@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   getUserShows,
   deleteShow,
@@ -17,8 +17,7 @@ import {
   NavigateNextRounded,
   NavigateBeforeRounded,
 } from "@mui/icons-material";
-
-import { useCurAuth } from "../hooks/useAuth";
+import { useUser } from "../hooks/userContext"
 
 export function UserPage({ user, userShows, setUserShows }) {
   const [shows, setShows] = useState([]); // Declare shows as a state variable
@@ -29,7 +28,10 @@ export function UserPage({ user, userShows, setUserShows }) {
   const [loading, setLoading] = useState(true);
   const [followerList, setFollowerList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
-  const { authUser, authLoading } = useCurAuth();
+
+ const authUser = useUser().user;
+
+
 
   const nav = useNavigate();
   const params = useParams();
@@ -40,19 +42,10 @@ export function UserPage({ user, userShows, setUserShows }) {
     let finShow = [];
     let notFin = [];
 
-    console.log("HELLO");
-
-    if (!authLoading) {
-      if (!authUser) {
-        console.log("rip buddy your guy is null");
-      } else {
-        console.log("maybe not");
-      }
-    }
-
     const fetchData = async () => {
       try {
-        const username = user.username;
+        if(authUser){
+        const username = authUser.username;
         let curShows;
         if (shows.length === 0) {
           if (username === params.username) {
@@ -87,7 +80,7 @@ export function UserPage({ user, userShows, setUserShows }) {
         setShows(notFin);
         setFinShow(finShow);
 
-        if (pageUser != null && pageUser.email != user.email) {
+        if (pageUser != null && pageUser.email != authUser.email) {
           const ifFollowing = await checkIfFollowing(
             user.email,
             pageUser.email
@@ -101,16 +94,17 @@ export function UserPage({ user, userShows, setUserShows }) {
             setFollowingList(curFollow);
           }
         }
+      }
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false); // Set loading to false after data is fetched
       }
-    };
-
-    console.log("calling fetch");
+  }
+    if(authUser){
     fetchData(); // Call fetchData inside useEffect
-  }, [authUser, authLoading]); // Add user.email as a dependency
+    }
+  }, [authUser]); // Add user.email as a dependency
 
   const handleType = (type) => {
     setType(type);

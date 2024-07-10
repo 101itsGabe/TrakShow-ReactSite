@@ -10,8 +10,9 @@ import {
 } from "../api/FirebaseApi";
 import "../App.css";
 import { Header } from "../pages/Header";
+import { useUser } from "../hooks/userContext"
 
-export const ShowPage = ({ user, setUserShows }) => {
+export const ShowPage = ({ setUserShows }) => {
   const [curShow, setCurShow] = useState(null); // State for current show
   const [episodes, setEpisodes] = useState([]); // State for episodes
   const [showName, setName] = useState("");
@@ -24,6 +25,8 @@ export const ShowPage = ({ user, setUserShows }) => {
   const params = new URLSearchParams(location.search);
   const param1 = params.get("param1");
   const param2 = params.get("param2");
+
+  const user = useUser().user
 
   const stripHtmlTags = (htmlString) => {
     return htmlString.replace(/<[^>]+>/g, "");
@@ -68,7 +71,7 @@ export const ShowPage = ({ user, setUserShows }) => {
     if (curShow == null) {
       fetchData();
     }
-  }, [curShow]);
+  }, [curShow, user]);
 
   useEffect(() => {
     const fetchData = async () => {
