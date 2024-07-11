@@ -397,7 +397,7 @@ export async function followUser(email, followingEmail, followingUsername) {
     const followingCollection = collection(userDoc.ref, "following");
     await addDoc(followingCollection, {
       userEmail: followingEmail,
-      username: followingUsername
+      username: followingUsername,
     });
   }
 
@@ -525,37 +525,43 @@ export async function getFeed(lastDoc = null, getFollowing, email) {
     if (lastDoc) {
       const lastDocRef = doc(feedCollection, lastDoc.id);
       const lastDocData = await getDoc(lastDocRef);
-      feedQuery = query(
-        feedCollection,
-        orderBy("timestamp", "desc"),
-        startAfter(lastDocData),
-        where("email", "in", userEmails),
-        limit(5)
-      );
+      if (followingList.length > 0) {
+        feedQuery = query(
+          feedCollection,
+          orderBy("timestamp", "desc"),
+          startAfter(lastDocData),
+          where("email", "in", userEmails),
+          limit(5)
+        );
+      }
       ifMore = true;
     } else {
-      feedQuery = query(
-        feedCollection,
-        where("email", "in",userEmails),
-        orderBy("timestamp", "desc"),
-        limit(5)
-      );
+      if (followingList.length > 0) {
+        feedQuery = query(
+          feedCollection,
+          where("email", "in", userEmails),
+          orderBy("timestamp", "desc"),
+          limit(5)
+        );
+      }
     }
   }
 
-  const feedSnapshot = await getDocs(feedQuery);
-  if (!feedSnapshot.empty) {
-    feedSnapshot.forEach(async (doc) => {
-      try {
-        let data = doc.data();
-        feedList.push(data);
-      } catch (error) {
-        console.og("Error");
-      }
-    });
-  } else {
-    console.log("its empty");
-    return feedList
+  if (feedQuery !== null) {
+    const feedSnapshot = await getDocs(feedQuery);
+    if (!feedSnapshot.empty) {
+      feedSnapshot.forEach(async (doc) => {
+        try {
+          let data = doc.data();
+          feedList.push(data);
+        } catch (error) {
+          console.og("Error");
+        }
+      });
+    } else {
+      console.log("its empty");
+      return feedList;
+    }
   }
   return feedList;
 }

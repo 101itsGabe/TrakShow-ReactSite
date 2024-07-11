@@ -125,7 +125,7 @@ export const SearchPage = ({ user }) => {
         <button onClick={() => handleType(false)}>Users</button>
       </div>
 
-{/*
+      {/*
       <select id="dropdown" value={selectedOption} onChange={handleDropChange}>
         <option value="">Select</option>
         <option value="Action">Action</option>
@@ -138,8 +138,7 @@ export const SearchPage = ({ user }) => {
       </select>
       */}
 
-      
-        {typeSearch ? (
+      {typeSearch ? (
         <div className="Search-Scroll">
           {searchResults.map((item, index) => (
             <div key={index}>
@@ -158,20 +157,20 @@ export const SearchPage = ({ user }) => {
               <p style={{ color: "white" }}> {item.name || item.show.name}</p>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="User-Container">
+          <div className="User-Scroll">
+            {userList.map((item, index) => (
+              <div key={index}>
+                <button className="User-Btn" onClick={() => gotoUser(item)}>
+                  <p style={{ color: "white" }}>{item.username}</p>
+                </button>
+              </div>
+            ))}
           </div>
-        ) : (
-          <div className="User-Container">
-            <div className="User-Scroll">
-              {userList.map((item, index) => (
-                <div key={index}>
-                  <button className="User-Btn" onClick={() => gotoUser(item)}>
-                    <p style={{ color: "white" }}>{item.username}</p>
-                  </button>
-                </div>
-              ))}
-            </div>
-            </div>
-        )}
+        </div>
+      )}
       {typeSearch ? (
         <>
           <div style={{ padding: 15 }}>
@@ -182,7 +181,7 @@ export const SearchPage = ({ user }) => {
             >
               <NavigateBeforeRounded />
             </button>
-            <text className="Page-Btn-Text">{curPage}</text>
+            <p className="Page-Btn-Text">{curPage}</p>
             <button
               onClick={() => {
                 handleNextPage(true);

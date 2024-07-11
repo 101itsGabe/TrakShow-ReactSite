@@ -17,7 +17,7 @@ import {
   NavigateNextRounded,
   NavigateBeforeRounded,
 } from "@mui/icons-material";
-import { useUser } from "../hooks/userContext"
+import { useUser } from "../hooks/userContext";
 
 export function UserPage({ user, userShows, setUserShows }) {
   const [shows, setShows] = useState([]); // Declare shows as a state variable
@@ -28,81 +28,82 @@ export function UserPage({ user, userShows, setUserShows }) {
   const [loading, setLoading] = useState(true);
   const [followerList, setFollowerList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
+  const [pageUser, setPageUser] = useState(null);
 
- const authUser = useUser().user;
-
-
+  const authUser = useUser().user;
 
   const nav = useNavigate();
   const params = useParams();
   const location = useLocation();
-  const pageUser = location.state?.user;
 
   useEffect(() => {
     let finShow = [];
     let notFin = [];
 
+    console.log("doink");
     const fetchData = async () => {
+      setPageUser(location.state?.user);
+      console.log("heelo?");
       try {
-        if(authUser){
-        const username = authUser.username;
-        let curShows;
-        if (shows.length === 0) {
-          if (username === params.username) {
-            curShows = await getUserShows(username);
-            setMyShow(true);
-          } else {
-            curShows = await getUserShows(params.username);
-            setMyShow(false);
+        if (authUser) {
+          const username = authUser.username;
+          let curShows;
+          if (shows.length === 0) {
+            if (username === params.username) {
+              curShows = await getUserShows(username);
+              setMyShow(true);
+            } else {
+              curShows = await getUserShows(params.username);
+              setMyShow(false);
+            }
+          }
+          //setShows(curShows); // Update shows state with fetched data
+
+          if (curShows !== null) {
+            const allEpisodes = await Promise.all(
+              curShows.map(async (show) => {
+                const episodes = await getEps(show.id);
+                const lastEp = episodes[episodes.length - 1];
+                if (
+                  //show.status === "Ended" &&
+                  show.curSeason === lastEp.season &&
+                  show.curEp === lastEp.number
+                ) {
+                  finShow.push(show);
+                } else {
+                  notFin.push(show);
+                }
+                return { show, episodes };
+              })
+            );
+          }
+
+          setShows(notFin);
+          setFinShow(finShow);
+
+          if (pageUser != null && pageUser.email != authUser.email) {
+            const ifFollowing = await checkIfFollowing(
+              user.email,
+              pageUser.email
+            );
+            setFollowing(ifFollowing);
+          }
+
+          if (followingList.length === 0) {
+            const curFollow = await getFollowingList(user.email);
+            if (curFollow != null && followingList.length == 0) {
+              setFollowingList(curFollow);
+            }
           }
         }
-        //setShows(curShows); // Update shows state with fetched data
-
-        if (curShows !== null) {
-          const allEpisodes = await Promise.all(
-            curShows.map(async (show) => {
-              const episodes = await getEps(show.id);
-              const lastEp = episodes[episodes.length - 1];
-              if (
-                //show.status === "Ended" &&
-                show.curSeason === lastEp.season &&
-                show.curEp === lastEp.number
-              ) {
-                finShow.push(show);
-              } else {
-                notFin.push(show);
-              }
-              return { show, episodes };
-            })
-          );
-        }
-
-        setShows(notFin);
-        setFinShow(finShow);
-
-        if (pageUser != null && pageUser.email != authUser.email) {
-          const ifFollowing = await checkIfFollowing(
-            user.email,
-            pageUser.email
-          );
-          setFollowing(ifFollowing);
-        }
-
-        if (followingList.length === 0) {
-          const curFollow = await getFollowingList(user.email);
-          if (curFollow != null && followingList.length == 0) {
-            setFollowingList(curFollow);
-          }
-        }
-      }
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false); // Set loading to false after data is fetched
       }
-  }
-    if(authUser){
-    fetchData(); // Call fetchData inside useEffect
+    };
+    if (authUser) {
+      fetchData(); // Call fetchData inside useEffect
     }
   }, [authUser]); // Add user.email as a dependency
 
@@ -133,8 +134,13 @@ export function UserPage({ user, userShows, setUserShows }) {
   };
 
   const gotoUser = (curUser) => {
-    nav("/userpage/user/" + curUser.username, { state: { curUser } });
-    shows.length = 0;
+    nav({
+      pathname: "/userpage/user/" + curUser.username,
+      state: { curUser },
+    });
+    setShows([]);
+    setFinShow([]);
+
     setType(0);
   };
 

@@ -4,8 +4,10 @@ import { Text, View } from "react";
 import googleimg from "../images/googlelogo.jpg";
 import { useNavigate, Navigate } from "react-router-dom";
 import logo from "../images/logo.png";
+import { useUser } from "../hooks/userContext";
 
-export const SignIn = ({ setCurUser, setUserShow }) => {
+export const SignIn = ({ setUserShow }) => {
+  const { setUser } = useUser();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,8 +24,7 @@ export const SignIn = ({ setCurUser, setUserShow }) => {
   const handleSignIn = async () => {
     try {
       const curUser = await emailSignIn(email, password);
-      setCurUser(curUser);
-      //console.log(curUser);
+      setUser(curUser);
       const username = curUser.email.split("@")[0];
       const shows = await getUserShows(username);
       setUserShow(shows);
@@ -35,7 +36,7 @@ export const SignIn = ({ setCurUser, setUserShow }) => {
   const btnSignIn = async () => {
     try {
       const curUser = await googleSignIn();
-      setCurUser(curUser);
+      setUser(curUser);
       console.log(curUser);
       const username = curUser.email.split("@")[0];
       const shows = await getUserShows(username);
@@ -51,7 +52,7 @@ export const SignIn = ({ setCurUser, setUserShow }) => {
 
   return (
     <div className="sign-in">
-      <img src={logo} style={{padding: 30}}></img>
+      <img src={logo} style={{ padding: 30 }}></img>
       <p
         style={{
           fontSize: 32,
@@ -97,7 +98,12 @@ export const SignIn = ({ setCurUser, setUserShow }) => {
           style={{ padding: 10 }}
           onClick={btnSignIn}
         >
-          <img src={googleimg} width={40} height={25} style={{marginRight: 10, borderRadius: 10}} />
+          <img
+            src={googleimg}
+            width={40}
+            height={25}
+            style={{ marginRight: 10, borderRadius: 10 }}
+          />
           Sign In
         </button>
       </div>

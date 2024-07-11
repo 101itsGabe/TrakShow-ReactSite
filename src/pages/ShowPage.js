@@ -10,7 +10,7 @@ import {
 } from "../api/FirebaseApi";
 import "../App.css";
 import { Header } from "../pages/Header";
-import { useUser } from "../hooks/userContext"
+import { useUser } from "../hooks/userContext";
 
 export const ShowPage = ({ setUserShows }) => {
   const [curShow, setCurShow] = useState(null); // State for current show
@@ -26,7 +26,7 @@ export const ShowPage = ({ setUserShows }) => {
   const param1 = params.get("param1");
   const param2 = params.get("param2");
 
-  const user = useUser().user
+  const user = useUser().user;
 
   const stripHtmlTags = (htmlString) => {
     return htmlString.replace(/<[^>]+>/g, "");
