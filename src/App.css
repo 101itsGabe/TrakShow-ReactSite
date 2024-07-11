@@ -1,7 +1,7 @@
 :root {
   --main-bg-color: #213a61;
   --accent-btn-color: #305080;
-  --user-show-color: lightgray;
+  --user-show-color: rgb(225, 225, 225);
 }
 
 .App {

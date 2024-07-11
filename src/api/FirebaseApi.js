@@ -67,6 +67,18 @@ export async function getCurUser(email) {
     return null;
   }
 }
+
+export async function getUsername(username){
+  const userCollection = collection(db, "Users");
+  const q = query(userCollection, where("username", "==", username));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const doc = querySnapshot.docs[0];
+    return doc.data();
+  } else {
+    return null;
+  }
+}
 export async function getUsers() {
   const usersCollection = collection(db, "Users");
   const usersSnapshot = await getDocs(usersCollection);
@@ -483,7 +495,10 @@ export async function getFollowingList(email) {
       if (!followingSnapshot.empty) {
         followingSnapshot.forEach((doc) => {
           if (doc != null) {
+            const data = doc.data();
+            if(data.userEmail != null){
             followList.push(doc.data());
+            }
           }
         });
       }
@@ -494,7 +509,7 @@ export async function getFollowingList(email) {
   }
 }
 
-export async function getFeed(lastDoc = null, getFollowing, email) {
+export async function getFeed(lastDoc = null, getFollowing, email, followingList) {
   const feedCollection = collection(db, "UserFeed");
   let feedList = [];
   let feedQuery = null;
@@ -515,7 +530,7 @@ export async function getFeed(lastDoc = null, getFollowing, email) {
       feedQuery = query(feedCollection, orderBy("timestamp", "desc"), limit(5));
     }
   } else {
-    const followingList = await getFollowingList(email);
+    //const followingList = await getFollowingList(email);
     const userEmails = followingList
       .filter(
         (following) =>
@@ -638,6 +653,23 @@ export async function addPost(email, show, ep) {
   } catch (error) {
     console.error("Error adding post:", error);
   }
+}
+
+export async function changeUsername(email, username) {
+  try{
+  const usersCollection = collection(db, "Users");
+  const q = query(usersCollection, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    const userDoc = querySnapshot.docs[0]; // Assuming email is unique, take the first result
+    const newValues = {username: username}
+    await updateDoc(userDoc.ref, newValues);
+  }
+}
+catch(error){
+  console.log(error.message)
+}
 }
 
 export { app, analytics, db };

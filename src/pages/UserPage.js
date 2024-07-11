@@ -7,6 +7,7 @@ import {
   unfollowUser,
   checkIfFollowing,
   getFollowingList,
+  getUsername
 } from "../api/FirebaseApi";
 import { useNavigate } from "react-router-dom";
 import { getEps, getShow } from "../api/TVShowApi";
@@ -16,10 +17,11 @@ import { BeatLoader } from "react-spinners";
 import {
   NavigateNextRounded,
   NavigateBeforeRounded,
+  PanoramaRounded,
 } from "@mui/icons-material";
 import { useUser } from "../hooks/userContext";
 
-export function UserPage({ user, userShows, setUserShows }) {
+export function UserPage({ userShows, setUserShows }) {
   const [shows, setShows] = useState([]); // Declare shows as a state variable
   const [finishedShows, setFinShow] = useState([]);
   const [isMyShow, setMyShow] = useState(false);
@@ -30,23 +32,21 @@ export function UserPage({ user, userShows, setUserShows }) {
   const [followingList, setFollowingList] = useState([]);
   const [pageUser, setPageUser] = useState(null);
 
-  const authUser = useUser().user;
+  const user = useUser().user;
 
   const nav = useNavigate();
-  const params = useParams();
   const location = useLocation();
+  const params = useParams();
 
   useEffect(() => {
     let finShow = [];
     let notFin = [];
 
-    console.log("doink");
     const fetchData = async () => {
-      setPageUser(location.state?.user);
-      console.log("heelo?");
+
       try {
-        if (authUser) {
-          const username = authUser.username;
+        if (user) {
+          const username = user.username;
           let curShows;
           if (shows.length === 0) {
             if (username === params.username) {
@@ -55,6 +55,10 @@ export function UserPage({ user, userShows, setUserShows }) {
             } else {
               curShows = await getUserShows(params.username);
               setMyShow(false);
+              const otherUser = await getUsername(params.username);
+              if(otherUser){
+                setPageUser(otherUser);
+              }
             }
           }
           //setShows(curShows); // Update shows state with fetched data
@@ -80,14 +84,14 @@ export function UserPage({ user, userShows, setUserShows }) {
 
           setShows(notFin);
           setFinShow(finShow);
-
-          if (pageUser != null && pageUser.email != authUser.email) {
+          if (pageUser != null && pageUser.email != user.email) {
             const ifFollowing = await checkIfFollowing(
               user.email,
               pageUser.email
             );
             setFollowing(ifFollowing);
           }
+          else{
 
           if (followingList.length === 0) {
             const curFollow = await getFollowingList(user.email);
@@ -96,16 +100,17 @@ export function UserPage({ user, userShows, setUserShows }) {
             }
           }
         }
+        }
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false); // Set loading to false after data is fetched
       }
     };
-    if (authUser) {
+    if (user) {
       fetchData(); // Call fetchData inside useEffect
     }
-  }, [authUser]); // Add user.email as a dependency
+  }, [user, params.username, pageUser]); // Add user.email as a dependency
 
   const handleType = (type) => {
     setType(type);
@@ -140,8 +145,8 @@ export function UserPage({ user, userShows, setUserShows }) {
     });
     setShows([]);
     setFinShow([]);
-
     setType(0);
+    setLoading(true);
   };
 
   const removeShow = async (show) => {
@@ -342,7 +347,8 @@ export function UserPage({ user, userShows, setUserShows }) {
   );
 
   const curFollowList = () => (
-    <div>
+    <div className="User-Container">
+          <div className="User-Scroll">
       {followingList.map((item, index) => (
         <div key={index}>
           <button className="User-Btn" onClick={() => gotoUser(item)}>
@@ -350,6 +356,7 @@ export function UserPage({ user, userShows, setUserShows }) {
           </button>
         </div>
       ))}
+      </div>
     </div>
   );
 

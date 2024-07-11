@@ -1,5 +1,5 @@
 import { Header } from "./Header";
-import { getFeed, addLike } from "../api/FirebaseApi";
+import { getFeed, addLike, getFollowingList } from "../api/FirebaseApi";
 import { useState, useEffect } from "react";
 import likebtn from "../images/likebtn.jpg";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -14,6 +14,7 @@ export const FeedPage = () => {
   const [feedList, setFeed] = useState([]);
   const [feedHasMore, setHasMore] = useState(true);
   const [followingHasMore, setFollowingMore] = useState(true);
+  const [followingList, setFollowingList] = useState([]);
   const [feedType, setType] = useState(false);
   const [pulled, setPulled] = useState(false);
   const nav = useNavigate();
@@ -64,7 +65,7 @@ export const FeedPage = () => {
       } else {
         if (followingFeed.length !== 0) {
           const lastDoc = followingFeed[followingFeed.length - 1];
-          const moreFeed = await getFeed(lastDoc, true, user.email);
+          const moreFeed = await getFeed(lastDoc, true, user.email, followingList);
           setFollowingFeed([...followingFeed, ...moreFeed]);
           if (moreFeed.length < 5) {
             setFollowingMore(false);
@@ -80,15 +81,17 @@ export const FeedPage = () => {
     const fetchFeed = async () => {
       try {
         if (followingFeed.length === 0) {
-          const feed = await getFeed(null, true, user.email);
-          if (feed.length <= 5 && pulled === false) {
+          const curFollowingList = await getFollowingList(user.email);
+          setFollowingList(curFollowingList);
+          const feed = await getFeed(null, true, user.email, curFollowingList);
+          if (feed.length < 5 && pulled === false) {
             setFollowingMore(false);
           }
           setFollowingFeed(feed);
         }
         if (feedList.length === 0 && pulled === false) {
           const fullFeed = await getFeed(null, false, user.email);
-          if (fullFeed <= 5) {
+          if (fullFeed < 5) {
             setHasMore(false);
           }
           setFeed(fullFeed);

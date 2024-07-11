@@ -10,6 +10,8 @@ import {
   NavigateNextRounded,
   NavigateBeforeRounded,
 } from "@mui/icons-material";
+import { BeatLoader } from "react-spinners";
+import { colors } from "@mui/material";
 
 export const SearchPage = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State for the search term
@@ -20,6 +22,7 @@ export const SearchPage = ({ user }) => {
   const [userList, setList] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [curPage, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -41,6 +44,7 @@ export const SearchPage = ({ user }) => {
 
   const handleNextPage = async (type) => {
     let pageNum;
+    setLoading(false);
     try {
       if (type) {
         pageNum = curPage + 1;
@@ -56,6 +60,9 @@ export const SearchPage = ({ user }) => {
       setSearchResults(results);
     } catch (error) {
       console.log(error.message);
+    }
+    finally{
+      setLoading(true);
     }
   };
 
@@ -91,7 +98,6 @@ export const SearchPage = ({ user }) => {
         }
       });
     });
-    console.log(newList);
   };
 
   useEffect(() => {
@@ -104,13 +110,18 @@ export const SearchPage = ({ user }) => {
       } catch (error) {
         console.error("Error fetching recommendations:", error);
       }
+      finally{
+        setLoading(true);
+      }
     };
 
     fetchRecommendations();
+
   }, []); // Empty dependency array means this effect runs once on component mount
 
   return (
     <div>
+      {loading ? <>
       <input
         type="text"
         value={searchTerm}
@@ -173,7 +184,7 @@ export const SearchPage = ({ user }) => {
       )}
       {typeSearch ? (
         <>
-          <div style={{ padding: 15 }}>
+          <div style={{ display: "flex", justifyContent:"center" , padding: 15 }}>
             <button
               onClick={() => {
                 handleNextPage(false);
@@ -194,6 +205,9 @@ export const SearchPage = ({ user }) => {
       ) : (
         <></>
       )}
+      </> 
+      : <BeatLoader color="white"/>
+}
     </div>
   );
 };

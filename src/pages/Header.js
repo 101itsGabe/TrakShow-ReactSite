@@ -16,6 +16,7 @@ export const Header = ({ user, setUser }) => {
       setMenuToggle(!isMenuToggle);
     }
     nav("/userpage/user/" + user.username);
+    window.location.reload();
   };
   const navToSearch = (type) => {
     nav("/searchpage");
@@ -23,6 +24,11 @@ export const Header = ({ user, setUser }) => {
       setMenuToggle(!isMenuToggle);
     }
   };
+
+  const navToSettings = () =>{
+    nav("/settings/user/" + user.username);
+  };
+
   const navToFeed = (type) => {
     nav("/feedpage");
     if (type) {
@@ -31,9 +37,9 @@ export const Header = ({ user, setUser }) => {
   };
   const navToSignin = async (type) => {
     try {
+      nav("/");
       await signOutUser();
       setUser(null);
-      nav("/");
     } catch (error) {
       console.log(error.message);
     }
@@ -67,6 +73,11 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             My Feed
+          </button>
+          <button onClick={() => {
+            navToSettings();
+          }}>
+            Settings
           </button>
           <button
             onClick={() => {
@@ -109,6 +120,10 @@ export const Header = ({ user, setUser }) => {
               }}
             >
               Feed
+            </button>
+            <button className="Menu-barbtn" onClick={() => {
+            navToSettings();}}>
+              Settings
             </button>
             <button
               className="Menu-barbtn"

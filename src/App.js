@@ -13,6 +13,7 @@ import { SearchPage } from "./pages/SearchPage";
 import { ShowPage } from "./pages/ShowPage";
 import { UserPage } from "./pages/UserPage";
 import { FeedPage } from "./pages/FeedPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import { getUserShow, signOutUser, getCurUser } from "./api/FirebaseApi";
 import { Header } from "./pages/Header";
 import { SignUpPage } from "./pages/SignUpPage";
@@ -26,9 +27,9 @@ export const CurContext = createContext();
 
 function App() {
   const [user, setUser] = useState(null);
-  const [userShows, setShows] = useState([]);
-  const [isMenuToggle, setMenuToggle] = useState(true);
-  const [authUser, setAuth] = useState(null);
+  //const [userShows, setShows] = useState([]);
+  //const [isMenuToggle, setMenuToggle] = useState(true);
+  //const [authUser, setAuth] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -63,60 +64,6 @@ function App() {
       </div>
     </UserProvider>
   );
-
-  /*
-  return (
-    <UserProvider>
-    <div className="App">
-      <Router>
-        {user && (
-          <div>
-            <Header user={user} setUser={setUser} />
-          </div>
-        )}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                {user ? (
-                  <Navigate to="/searchpage" />
-                ) : (
-                  <SignIn setCurUser={setUser} setUserShow={setShows} />
-                )}
-              </>
-            }
-          ></Route>
-          <Route
-            path="/searchpage"
-            element={<SearchPage user={user} />}
-          ></Route>
-          <Route
-            path="/showpage/:showID"
-            element={<ShowPage user={user} setUserShows={setShows} />}
-          />
-          <Route
-            path="/userpage/user/:username"
-            element={
-              <UserPage
-                user={user}
-                userShows={userShows}
-                setUserShows={setShows}
-              />
-            }
-          />
-          <Route path="/feedpage" element={<FeedPage user={user} />} />
-          <Route
-            path="/signuppage"
-            element={<SignUpPage setCurUser={setUser} />}
-          />
-          <Route path="/singlefeedpage/:postId" element={<SingleFeedPage user={user}/>}/>
-        </Routes>
-      </Router>
-    </div>
-    </UserProvider>
-  );
-  */
 }
 
 const AppContent = () => {
@@ -145,20 +92,21 @@ const AppContent = () => {
       <Route path="/searchpage" element={<SearchPage user={user} />}></Route>
       <Route
         path="/showpage/:showID"
-        element={<ShowPage user={user} setUserShows={setShows} />}
+        element={<ShowPage setUserShows={setShows} />}
       />
       <Route
         path="/userpage/user/:username"
         element={
-          <UserPage user={user} userShows={userShows} setUserShows={setShows} />
+          <UserPage userShows={userShows} setUserShows={setShows} />
         }
       />
-      <Route path="/feedpage" element={<FeedPage user={user} />} />
+      <Route path="/feedpage" element={<FeedPage />} />
       <Route path="/signuppage" element={<SignUpPage />} />
       <Route
         path="/singlefeedpage/:postId"
         element={<SingleFeedPage user={user} />}
       />
+      <Route path="/settings/user/:username" element={<SettingsPage/>}/>
     </Routes>
   );
 };

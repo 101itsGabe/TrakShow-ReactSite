@@ -11,6 +11,8 @@ import {
 import "../App.css";
 import { Header } from "../pages/Header";
 import { useUser } from "../hooks/userContext";
+import { ShareLocationTwoTone } from "@mui/icons-material";
+import { BeatLoader } from "react-spinners";
 
 export const ShowPage = ({ setUserShows }) => {
   const [curShow, setCurShow] = useState(null); // State for current show
@@ -21,6 +23,7 @@ export const ShowPage = ({ setUserShows }) => {
   const [showDesc, setDesc] = useState("");
   const [curSeason, setSeason] = useState(0);
   const [curEp, setEp] = useState(0);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const param1 = params.get("param1");
@@ -66,6 +69,9 @@ export const ShowPage = ({ setUserShows }) => {
       } catch (error) {
         console.error("error", error);
       }
+      finally{
+        setLoading(true);
+      }
     };
 
     if (curShow == null) {
@@ -105,7 +111,8 @@ export const ShowPage = ({ setUserShows }) => {
 
   return (
     <div>
-      {curShow != null && (
+      {loading ? (
+      curShow != null && (
         <>
           <div className="Show-Page">
             <img src={curShow.image.original}></img>
@@ -115,6 +122,7 @@ export const ShowPage = ({ setUserShows }) => {
               <p>{curShow.rating.average}/10</p>
               <p className="Show-Desc">{showDesc}</p>
               <p>Episode length: {episodes.length}</p>
+              {isAdded ? <p>Choose Your Episode!</p> : <></>}
 
               <div class="Ep-Scroll">
                 {episodes.map((item, index) => (
@@ -137,14 +145,15 @@ export const ShowPage = ({ setUserShows }) => {
                   <p style={{ color: "white" }}> Ep: {curEp}</p>
                 </div>
               ) : (
-                <button onClick={btnAddShow} className="header-btn">
+                <button onClick={btnAddShow} className="Google-Btn" style={{margin: 10}}>
                   Add Show +
                 </button>
               )}
             </div>
           </div>
         </>
-      )}
+      ))
+              : <><BeatLoader color="white"/></>}
     </div>
   );
 };
