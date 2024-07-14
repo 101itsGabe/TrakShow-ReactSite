@@ -20,13 +20,15 @@ export const FeedPage = () => {
   const nav = useNavigate();
   const user = useUser().user;
 
-  const addLikeBtn = async (post) => {
-    //console.log(post);
+  const addLikeBtn = async (fullPost) => {
+    const post = fullPost.post
     try {
       if (feedType) {
         const newPost = await addLike(user.email, post);
+        let newFullPost = {...fullPost, post: newPost, liked: !fullPost.liked}
+
         const updatedFeedList = feedList.map((p) =>
-          p.id === newPost.id ? newPost : p
+          p.post.id === newFullPost.post.id ? newFullPost : p
         );
 
         setFeed(updatedFeedList);
@@ -47,6 +49,10 @@ export const FeedPage = () => {
     nav("/singlefeedpage/" + post.id, { state: { post } });
   };
 
+  const navToUser = (username) => {
+    nav("/userpage/user/" + username);
+  }
+
   const handleType = (type) => {
     setType(type);
   };
@@ -56,7 +62,7 @@ export const FeedPage = () => {
       if (feedType) {
         if (feedList.length !== 0) {
           const lastDoc = feedList[feedList.length - 1];
-          const moreFeed = await getFeed(lastDoc, false, user.email);
+          const moreFeed = await getFeed(lastDoc.post, false, user);
           setFeed([...feedList, ...moreFeed]);
           if (moreFeed.length < 5 || moreFeed === null) {
             setHasMore(false);
@@ -65,7 +71,7 @@ export const FeedPage = () => {
       } else {
         if (followingFeed.length !== 0) {
           const lastDoc = followingFeed[followingFeed.length - 1];
-          const moreFeed = await getFeed(lastDoc, true, user.email, followingList);
+          const moreFeed = await getFeed(lastDoc.post, true, user, followingList);
           setFollowingFeed([...followingFeed, ...moreFeed]);
           if (moreFeed.length < 5) {
             setFollowingMore(false);
@@ -83,14 +89,14 @@ export const FeedPage = () => {
         if (followingFeed.length === 0) {
           const curFollowingList = await getFollowingList(user.email);
           setFollowingList(curFollowingList);
-          const feed = await getFeed(null, true, user.email, curFollowingList);
+          const feed = await getFeed(null, true, user, curFollowingList);
           if (feed.length < 5 && pulled === false) {
             setFollowingMore(false);
           }
           setFollowingFeed(feed);
         }
         if (feedList.length === 0 && pulled === false) {
-          const fullFeed = await getFeed(null, false, user.email);
+          const fullFeed = await getFeed(null, false, user);
           if (fullFeed < 5) {
             setHasMore(false);
           }
@@ -109,10 +115,14 @@ export const FeedPage = () => {
   }, [feedList, user]);
 
   return (
-    <div>
+    <div className="feed-container">
       <div className="Users-Btn">
-        <div onClick={() => handleType(false)}>Following</div>
-        <div onClick={() => handleType(true)}>All Feed</div>
+      <div onClick={() => handleType(false)} className="tab-button">
+          Following
+        </div>
+        <div onClick={() => handleType(true)} className="tab-button">
+          All Feed
+        </div>
       </div>
       <div id="scrollableDiv" className="Feed-List">
         {!feedType ? (
@@ -127,54 +137,33 @@ export const FeedPage = () => {
               loader={
                 <div>
                   <BeatLoader style={{ color: "white" }} />
-                  <p style={{ color: "white" }}>Hold on...</p>
+                  <p style={{ color: "white" }}>Loading...</p>
                 </div>
               }
               endMessage={
-                <p style={{ color: "white" }}>"I think we is done?"</p>
+                <p style={{ color: "white" }}>"Finished Feed"</p>
               }
             >
               {followingFeed.map((item, index) => {
                 const isLiked = false;
+                console.log(item);
 
                 return (
-                  <div
-                    key={index}
-                    style={{
-                      border: "2px solid white",
-                      padding: "10px",
-                      margin: "10px 0",
-                    }}
-                  >
-                    <p
-                      style={{
-                        color: "white",
-                        wordWrap: "break-word",
-                        whiteSpace: "normal",
-                        maxWidth: "100%",
-                      }}
-                    >
-                      {item.comment}
-                    </p>
-                    <p style={{ color: "white" }}>{item.email}</p>
-
-                    <div>
-                      <button
-                        onClick={() => {
-                          addLikeBtn(item);
-                        }}
-                      >
-                        <ThumbUpOffAlt /> <p>{item.likes}</p>
-                      </button>
-                      <button
-                        onClick={() => {
-                          navToFeed(item);
-                        }}
-                      >
-                        <Comment />
-                      </button>
-                    </div>
+                  <div key={index} className="feed-item">
+                  <p className="comment">{item.post.comment}</p>
+                  <div className="user-info">
+                    <img src={item.post.photoURL} alt="User Avatar" className="avatar" />
+                    <p>{item.post.username}</p>
                   </div>
+                  <div className="actions">
+                    <button onClick={() => addLikeBtn(item)} className="action-button">
+                      <ThumbUpOffAlt /> <p>{item.post.likes}</p>
+                    </button>
+                    <button onClick={() => navToFeed(item)} className="action-button">
+                      <Comment />
+                    </button>
+                  </div>
+                </div>
                 );
               })}
             </InfiniteScroll>
@@ -191,54 +180,34 @@ export const FeedPage = () => {
               loader={
                 <div>
                   <BeatLoader style={{ color: "white" }} />
-                  <p style={{ color: "white" }}>Hold on...</p>
+                  <p style={{ color: "white" }}>Loading...</p>
                 </div>
               }
               endMessage={
-                <p style={{ color: "white" }}>"I think we is done?"</p>
+                <p style={{ color: "white" }}>"Finished Feed"</p>
               }
             >
               {feedList.map((item, index) => {
                 const isLiked = false;
 
                 return (
-                  <div
-                    key={index}
-                    style={{
-                      border: "2px solid white",
-                      padding: "10px",
-                      margin: "10px 0",
-                    }}
-                  >
-                    <p
-                      style={{
-                        color: "white",
-                        wordWrap: "break-word",
-                        whiteSpace: "normal",
-                        maxWidth: "100%",
-                      }}
-                    >
-                      {item.comment}
-                    </p>
-                    <p style={{ color: "white" }}>{item.email}</p>
-
-                    <div>
-                      <button
-                        onClick={() => {
-                          addLikeBtn(item);
-                        }}
-                      >
-                        <ThumbUpOffAlt /> <p>{item.likes}</p>
-                      </button>
-                      <button
-                        onClick={() => {
-                          navToFeed(item);
-                        }}
-                      >
-                        <Comment />
-                      </button>
-                    </div>
-                  </div>
+                  <div key={index} className="feed-item">
+                <p className="comment">{item.post.comment}</p>
+                <div className="user-info">
+                  <img src={item.post.photoURL} alt="User Avatar" className="avatar" />
+                  <p>{item.post.username}</p>
+                </div>
+                <div className="actions">
+                  <button onClick={() => addLikeBtn(item)} className="action-button">
+                    {item.liked ? 
+                    <ThumbUpAlt /> : <ThumbUpOffAlt/>}
+                    <p>{item.post.likes}</p>
+                  </button>
+                  <button onClick={() => navToFeed(item)} className="action-button">
+                    <Comment />
+                  </button>
+                </div>
+              </div>
                 );
               })}
             </InfiniteScroll>

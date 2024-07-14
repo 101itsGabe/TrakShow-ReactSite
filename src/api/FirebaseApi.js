@@ -54,21 +54,23 @@ setPersistence(auth, browserLocalPersistence)
   })
   .catch((error) => {
     console.error("Error setting persistence:", error);
-  });
+});
+
+//User Functions
 
 export async function getCurUser(email) {
   const userCollection = collection(db, "Users");
   const q = query(userCollection, where("email", "==", email));
   const querySnapshot = await getDocs(q);
   if (!querySnapshot.empty) {
-    const doc = querySnapshot.docs[0];
+    const doc = querySnapshot.docs[0]; //Since this is query only doc that will be there is the first one
     return doc.data();
   } else {
     return null;
   }
 }
 
-export async function getUsername(username){
+export async function getUsername(username) {
   const userCollection = collection(db, "Users");
   const q = query(userCollection, where("username", "==", username));
   const querySnapshot = await getDocs(q);
@@ -109,6 +111,7 @@ export async function signUpUser(email, password, username) {
         email: user.email,
         followercount: 0,
         username: username,
+        photoURL: "src/images/index.png"
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
       const followingCollection = collection(newdoc, "following");
@@ -124,6 +127,7 @@ export async function signUpUser(email, password, username) {
 }
 
 //I need to make sure username matches what the user signed in did
+//Need a way to check if email exists
 export async function emailSignIn(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -132,12 +136,14 @@ export async function emailSignIn(email, password) {
       password
     );
     const user = userCredential.user;
+    //console.log(user);
     const userCollection = collection(db, "Users");
     const q = query(userCollection, where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
       const userData = doc.data();
+      console.log(userData);
       return userData;
     } else {
       return null;
@@ -154,6 +160,7 @@ export async function googleSignIn() {
   try {
     const result = await signInWithPopup(auth, provider); // Wait for the signInWithPopup Promise to resolve
     const user = result.user;
+    console.log(user);
     const userCollection = collection(db, "Users");
     const q = query(userCollection, where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
@@ -168,6 +175,7 @@ export async function googleSignIn() {
         email: user.email,
         followercount: 0,
         username: usernameStr,
+        photoURL: user.photoURL
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
       const followingCollection = collection(newdoc, "following");
@@ -192,10 +200,12 @@ export async function signOutUser() {
   }
 }
 
-export async function updateEp(email, curShow, newEp, epIndex) {
+//Updating Shows
+
+export async function updateEp(user, curShow, newEp, epIndex) {
   try {
     const userCollection = collection(db, "Users");
-    const q = query(userCollection, where("email", "==", email));
+    const q = query(userCollection, where("email", "==", user.email));
     const userSnapshot = await getDocs(q);
     if (!userSnapshot.empty) {
       const doc = userSnapshot.docs[0];
@@ -211,7 +221,7 @@ export async function updateEp(email, curShow, newEp, epIndex) {
           epIndex: epIndex,
         };
         await updateDoc(showDoc.ref, newValues);
-        await addPost(email, curShow, newEp);
+        await addPost(user, curShow, newEp);
       }
     }
   } catch (error) {
@@ -292,6 +302,8 @@ export async function isShowAdded(email, curShow) {
   return false; // Return false if the show is not found
 }
 
+//Feed & Comments
+
 export async function addComment(id, comment, email, isSpoiler) {
   try {
     const feedCollection = collection(db, "UserFeed");
@@ -361,6 +373,7 @@ export async function deleteComment(postID, commentID) {
 }
 
 export async function addLike(email, post) {
+  
   try {
     const feedCollection = collection(db, "UserFeed");
     const feedQ = query(feedCollection, where("id", "==", post.id));
@@ -389,8 +402,8 @@ export async function addLike(email, post) {
       const updatedSnapshot = await getDocs(feedQ);
       const updatedDoc = updatedSnapshot.docs[0];
 
-      console.log("Post going out");
-      console.log(updatedDoc.data());
+      //console.log("Post going out");
+      //console.log(updatedDoc.data());
       return updatedDoc.data();
     }
   } catch (error) {
@@ -496,8 +509,8 @@ export async function getFollowingList(email) {
         followingSnapshot.forEach((doc) => {
           if (doc != null) {
             const data = doc.data();
-            if(data.userEmail != null){
-            followList.push(doc.data());
+            if (data.userEmail != null) {
+              followList.push(doc.data());
             }
           }
         });
@@ -509,7 +522,12 @@ export async function getFollowingList(email) {
   }
 }
 
-export async function getFeed(lastDoc = null, getFollowing, email, followingList) {
+export async function getFeed(
+  lastDoc = null,
+  getFollowing,
+  user,
+  followingList
+) {
   const feedCollection = collection(db, "UserFeed");
   let feedList = [];
   let feedQuery = null;
@@ -563,12 +581,42 @@ export async function getFeed(lastDoc = null, getFollowing, email, followingList
   }
 
   if (feedQuery !== null) {
+    let isLiked = false;
     const feedSnapshot = await getDocs(feedQuery);
+    /*
+    if(feedSnapshot.docs.length > 0){
+    const likesDoc = feedSnapshot.docs[0];
+      const likeCollection = collection(likesDoc.ref, "likeList");
+      const likeQ = query(likeCollection, where("email", "==", user.email));
+      const likesSnapshot = await getDocs(likeQ);
+      if (!likesSnapshot.empty) {
+        const likeDoc = likesSnapshot.docs[0];
+        console.log("Liked by us");
+        console.log(likeDoc.data());
+        isLiked = true;
+      }
+      else{
+        console.log("Not liked us");
+      }
+    }
+    */
     if (!feedSnapshot.empty) {
       feedSnapshot.forEach(async (doc) => {
         try {
+          const likeCollection = collection(doc.ref, "likeList");
+          const likeQ = query(likeCollection, where("email", "==", user.email));
+          const likesSnapshot = await getDocs(likeQ);
+          if (!likesSnapshot.empty) {
+            const likeDoc = likesSnapshot.docs[0];
+            console.log("Liked by us");
+            console.log(likeDoc.data());
+            isLiked = true;
+          }
+          else{
+            console.log("Not liked us");
+          }
           let data = doc.data();
-          feedList.push(data);
+          feedList.push({post: data, liked: isLiked});
         } catch (error) {
           console.og("Error");
         }
@@ -581,12 +629,12 @@ export async function getFeed(lastDoc = null, getFollowing, email, followingList
   return feedList;
 }
 
-export async function addShow(email, curShow, epName) {
+export async function addShow(user, curShow, epName) {
   try {
     const userCollection = collection(db, "Users");
     let ifContains = false;
     let showUpdated = false;
-    const q = query(userCollection, where("email", "==", email));
+    const q = query(userCollection, where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
@@ -615,7 +663,7 @@ export async function addShow(email, curShow, epName) {
 
         const episodes = await getEps(curShow.id);
         const firstEp = episodes[0];
-        await addPost(email, curShow, firstEp);
+        await addPost(user, curShow, firstEp);
 
         //AllShows
       }
@@ -625,23 +673,34 @@ export async function addShow(email, curShow, epName) {
   }
 }
 
-export async function addPost(email, show, ep) {
+export async function addPost(user, show, ep) {
+  console.log("Adding Post", user);
   try {
     const userCollection = collection(db, "UserFeed");
-    const username = email.split("@")[0];
     let curComment;
 
     if (ep.number === 1 && ep.season === 1) {
-      curComment = `${username} just added ${show.name} to their list!`;
+      curComment = `${user.username} just added ${show.name} to their list!`;
     } else {
-      curComment = `${username} just got the next episode of ${show.name}, EP: ${ep.number}, Season: ${ep.season}, ${ep.name}!`;
+      curComment = `${user.username} just got the next episode of ${show.name}, EP: ${ep.number}, Season: ${ep.season}, ${ep.name}!`;
     }
 
+    let photoStr = "";
+
+    if (user.photoURL && user.photoURL !== "") {
+      photoStr = user.photoURL;
+    } else {
+      photoStr = "src/images/index.png";
+    }
+    
+    console.log(photoStr);
     const docRef = await addDoc(userCollection, {
       comment: curComment,
-      email: email,
+      email: user.email,
       likes: 0,
       timestamp: serverTimestamp(),
+      username: user.username,
+      photoURL: photoStr
     });
 
     await setDoc(docRef, { id: docRef.id }, { merge: true });
@@ -656,20 +715,48 @@ export async function addPost(email, show, ep) {
 }
 
 export async function changeUsername(email, username) {
-  try{
-  const usersCollection = collection(db, "Users");
-  const q = query(usersCollection, where("email", "==", email));
-  const querySnapshot = await getDocs(q);
+  try {
+    const usersCollection = collection(db, "Users");
+    const q = query(usersCollection, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
 
-  if (!querySnapshot.empty) {
-    const userDoc = querySnapshot.docs[0]; // Assuming email is unique, take the first result
-    const newValues = {username: username}
-    await updateDoc(userDoc.ref, newValues);
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0]; // Assuming email is unique, take the first result
+      const newValues = { username: username };
+      await updateDoc(userDoc.ref, newValues);
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 }
-catch(error){
-  console.log(error.message)
-}
+
+export async function deleteAccount(email){
+  try{
+    const usersCollection = collection(db, "Users");
+    const q = query(usersCollection, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty){
+      const userDoc = querySnapshot.docs[0];
+      await deleteDoc(userDoc.ref);
+      const user = auth.currentUser;
+      if (user) {
+        user.delete().then(() => {
+            console.log('User account deleted.');
+            // Redirect to a different page or show a success message
+          })
+          .catch((error) => {
+            console.error('Error deleting user:', error);
+            // Handle the error, possibly show an error message to the user
+          });
+    }
+  }
+  else{
+    console.log("No User");
+  }
+  }
+  catch(error){
+    console.log(error.message);
+  }
 }
 
 export { app, analytics, db };

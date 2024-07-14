@@ -144,7 +144,6 @@ export const SingleFeedPage = (user) => {
       {isAddComment ? (
         <div className="Add-Comment-Background">
           <AddCommentPage
-            user={user.user}
             setAddComment={setAddComment}
             post={post}
             handleAddComment={handleAddComment}

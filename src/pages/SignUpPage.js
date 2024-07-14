@@ -28,17 +28,20 @@ export const SignUpPage = ({ setCurUser }) => {
   };
 
   const navToHome = () => {
+    if(passMatch && isEmail)
     nav("/");
   };
 
   const Register = async () => {
+    console.log(password);
+    console.log(confirmPass);
     if (password !== confirmPass || password.length !== 6) {
       setPassMatch(false);
     }
     if (!email.includes("@") || email === "") {
       setIsEamil(false);
     }
-    if (passMatch === true && isEmail === true && username !== "") {
+    if (password === confirmPass && password.length >= 6 && username !== "" && email.includes("@")) {
       try {
         const user = signUpUser(email, password, username);
         setUser(user);

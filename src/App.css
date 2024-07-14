@@ -2,6 +2,8 @@
   --main-bg-color: #213a61;
   --accent-btn-color: #305080;
   --user-show-color: rgb(225, 225, 225);
+  --dark-gray: #1e1e1e; /* New dark gray color */
+  --light-gray: #2a2a2a; /* Lighter shade of gray */
 }
 
 .App {
@@ -233,8 +235,101 @@
 .Feed-List {
   overflow-y: scroll;
   padding: 10px;
-  max-height: calc(100vh - 50px);
+  max-height: calc(100vh - 220px);
   box-sizing: border-box;
+  border-top: 1px solid #333;
+}
+
+
+/*Feed Css*/
+.feed-container {
+  background-color: var(--dark-gray); /* Updated to dark gray */
+  color: #f5f5f5;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.feed-item {
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: var(--light-gray); /* Updated to lighter shade of gray */
+}
+
+
+
+.tab-button {
+  cursor: pointer;
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: var(--accent-btn-color); 
+  color: #f5f5f5;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.tab-button:hover {
+  background-color: #555;
+}
+
+
+
+.comment {
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.user-info .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info p {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.action-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background-color: #444;
+  color: #f5f5f5;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #666;
+}
+
+.action-button p {
+  margin-left: 5px;
 }
 
 .Google-Btn {
@@ -457,7 +552,7 @@
 
 .header-btn button:hover {
   border-radius: 10px;
-  background-color: #3c4f6bbf;
+  background-color: var(--accent-btn-color);
 }
 
 .Add-Comment-Background {
@@ -571,6 +666,7 @@
   color: white;
 }
 
+/*
 .Users-Btn div:hover::after {
   content: "";
   position: absolute;
@@ -580,12 +676,32 @@
   height: 2px;
   background-color: white;
 }
+*/
 
 .Page-Btn-Text {
   color: white;
   padding-top: 2%;
   padding: 10px;
   font-size: 20px;
+}
+
+.Delete-Overlay{
+  position: fixed;
+  z-index: 0;
+  top: 30%;
+  left: 30%;
+  background-color: var(--accent-btn-color);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column; /* Ensures items stack vertically */
+  justify-content: center;
+}
+
+.Delete-Overlay-button{
+  width: 15%;
+  height: 15%;
+  top: 10px;
+  right: 10px;
 }
 
 /* Media query for smaller screens */

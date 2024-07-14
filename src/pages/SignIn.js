@@ -24,6 +24,7 @@ export const SignIn = ({ setUserShow }) => {
   const handleSignIn = async () => {
     try {
       const curUser = await emailSignIn(email, password);
+      console.log(curUser);
       setUser(curUser);
       const username = curUser.email.split("@")[0];
       const shows = await getUserShows(username);

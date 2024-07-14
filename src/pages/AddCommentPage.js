@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { addComment } from "../api/FirebaseApi";
+import { useUser } from "../hooks/userContext";
 
-export const AddCommentPage = ({ user, setAddComment, post, handleAddComment }) => {
+export const AddCommentPage = ({ setAddComment, post, handleAddComment }) => {
   const [comment, setComment] = useState("");
   const [hasSpoilers, setSpoilers] = useState(false);
+  const user = useUser().user
 
   const Replybtn = async () => {
     try {

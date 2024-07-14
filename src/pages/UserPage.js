@@ -20,6 +20,7 @@ import {
   PanoramaRounded,
 } from "@mui/icons-material";
 import { useUser } from "../hooks/userContext";
+import defaultPhoto  from "../images/index.png";
 
 export function UserPage({ userShows, setUserShows }) {
   const [shows, setShows] = useState([]); // Declare shows as a state variable
@@ -31,6 +32,8 @@ export function UserPage({ userShows, setUserShows }) {
   const [followerList, setFollowerList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [pageUser, setPageUser] = useState(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
 
   const user = useUser().user;
 
@@ -202,7 +205,7 @@ export function UserPage({ userShows, setUserShows }) {
         }
 
         const ep = episodes[curEp];
-        await updateEp(user.email, show, ep, curEp);
+        await updateEp(user, show, ep, curEp);
       }
       // Now fetch the updated user shows
       const curShows = await getUserShows(user.username);
@@ -379,6 +382,16 @@ export function UserPage({ userShows, setUserShows }) {
         </>
       ) : (
         <>
+        <div>
+          {user.photoURL === "" || user.photoURL === null ?
+          <div><img src={defaultPhoto}/></div>
+          :
+          <div>
+          <img src={user.photoURL}></img>
+          </div>
+        }
+          <p>{user.username}</p>
+        </div>
           <div className="Users-Btn">
             <div onClick={() => handleType(0)}>Currently Watching</div>
             <div onClick={() => handleType(1)}>Finished Shows</div>
