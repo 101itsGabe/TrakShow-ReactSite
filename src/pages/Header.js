@@ -65,6 +65,7 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <FaSearch />
+            Search
           </button>
           <button
             onClick={() => {
@@ -72,6 +73,7 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <PiTelevisionBold />
+            Shows
           </button>
           <button
             onClick={() => {
@@ -79,6 +81,7 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <CgFeed />
+            Feed
           </button>
           <button
             onClick={() => {
@@ -86,6 +89,7 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <IoIosSettings />
+            Settings
           </button>
           <button
             onClick={() => {
@@ -93,6 +97,7 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <FaSignOutAlt />
+            Sign-Out
           </button>
         </div>
       </div>
@@ -111,7 +116,8 @@ export const Header = ({ user, setUser }) => {
                 navToShows(true);
               }}
             >
-              My Shows
+              <PiTelevisionBold />
+              Shows
             </button>
             <button
               className="Menu-barbtn"
@@ -119,6 +125,7 @@ export const Header = ({ user, setUser }) => {
                 navToSearch(true);
               }}
             >
+              <FaSearch />
               Search
             </button>
             <button
@@ -127,6 +134,7 @@ export const Header = ({ user, setUser }) => {
                 navToFeed(true);
               }}
             >
+              <CgFeed />
               Feed
             </button>
             <button
@@ -135,6 +143,7 @@ export const Header = ({ user, setUser }) => {
                 navToSettings();
               }}
             >
+              <IoIosSettings />
               Settings
             </button>
             <button
@@ -143,6 +152,7 @@ export const Header = ({ user, setUser }) => {
                 navToSignin(true);
               }}
             >
+              <FaSignOutAlt />
               Sign Out
             </button>
           </div>

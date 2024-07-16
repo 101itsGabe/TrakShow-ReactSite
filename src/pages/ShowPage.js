@@ -90,7 +90,6 @@ export const ShowPage = ({ setUserShows }) => {
   }, [episodes, showID]);
 
   const changeEp = async (item) => {
-    console.log("hehe?");
     if (isAdded) {
       const index = episodes.findIndex(
         (ep) => item.number == ep.number && item.season == ep.season

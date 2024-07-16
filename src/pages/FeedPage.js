@@ -133,10 +133,10 @@ export const FeedPage = () => {
   return (
     <div className="feed-container">
       <div className="Users-Btn">
-        <div onClick={() => handleType(false)} className="tab-button">
+        <div onClick={() => handleType(false)} >
           Following
         </div>
-        <div onClick={() => handleType(true)} className="tab-button">
+        <div onClick={() => handleType(true)}>
           All Feed
         </div>
       </div>
@@ -159,25 +159,34 @@ export const FeedPage = () => {
               endMessage={<p style={{ color: "white" }}>"Finished Feed"</p>}
             >
               {followingFeed.map((item, index) => {
-                const isLiked = false;
-
+                //const isLiked = false;
                 return (
                   <div key={index} className="feed-item">
                     <p className="comment">{item.post.comment}</p>
                     <div className="user-info">
-                      {user.photoURL === "" ||
-                      user.photoURL === null ||
-                      user.photoURL === "src/images/index.png" ? (
-                        <img src={defaultPhoto}></img>
+
+                      {!item.post.photoUrl||
+                      item.post.photoUrl === "src/images/index.png" ? (
+                        <>
+                        <img src={defaultPhoto}
+                         className="avatar"></img>
+                        
+                        </>
+                        
                       ) : (
-                        <div>
-                          <img
-                            src={item.post.photoURL}
-                            alt="User Avatar"
-                            className="avatar"
-                          />
-                          <p>{item.post.username}</p>
-                        </div>
+                        <div
+                      className="user-info"
+                      onClick={() => {
+                        navToUser(item.post.username);
+                      }}
+                    >
+                      <img
+                        src={item.post.photoUrl}
+                        alt="User Avatar"
+                        className="avatar"
+                      />
+                      <p>{item.post.username}</p>
+                    </div>
                       )}
                     </div>
                     <div className="actions">

@@ -233,19 +233,6 @@ export function UserPage({ userShows, setUserShows }) {
 
   const curWatching = () => (
     <>
-      <div className="user-info">
-        {!isMyShow && (
-          <div className="user-details">
-            <p className="username">{params.username}</p>
-            <button
-              className={`follow-btn ${isFollowing ? "active" : ""}`}
-              onClick={followBtn}
-            >
-              {isFollowing ? "Following" : "Follow +"}
-            </button>
-          </div>
-        )}
-      </div>
       <p className="show-count">{shows.length} Shows</p>
       <div className="Show-Scroll">
         {shows.map((item, index) => (
@@ -375,20 +362,45 @@ export function UserPage({ userShows, setUserShows }) {
         </>
       ) : (
         <>
-          <div>
-            {user.photoURL === "" ||
-            user.photoURL === null ||
-            user.photoURL === "src/images/index.png" ? (
-              <div>
-                <img className="default-photo" src={defaultPhoto} />
-              </div>
+          <div className="user-info">
+            {pageUser === null ? (
+              <>
+                {user.photoURL === "" ||
+                user.photoURL === null ||
+                user.photoURL === "src/images/index.png" ? (
+                  <div>
+                    <img className="default-photo" src={defaultPhoto} />
+                  </div>
+                ) : (
+                  <div>
+                    <img src={user.photoUrl}></img>
+                  </div>
+                )}
+                <p>{user.username}</p>
+  
+              </>
             ) : (
-              <div>
-                <p>other</p>
-                <img src={user.photoUrl}></img>
-              </div>
+              <>
+                {!pageUser.photoURL ||
+                pageUser.photoURL === "src/images/index.png" ? (
+                  <div>
+                    <img className="default-photo" src={defaultPhoto} />
+                  </div>
+                ) : (
+                  <div>
+                    <p>Not Null</p>
+                    <p>{pageUser.photoUrl}</p>
+                  </div>
+                )}
+                <p>{pageUser.username}</p>
+                <button
+                  className={`follow-btn ${isFollowing ? "active" : ""}`}
+                  onClick={followBtn}
+                >
+                  {isFollowing ? "Following" : "Follow +"}
+                </button>
+              </>
             )}
-            <p>{user.username}</p>
           </div>
           <div className="Users-Btn">
             <div onClick={() => handleType(0)}>Currently Watching</div>
