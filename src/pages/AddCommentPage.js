@@ -1,21 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { addComment } from "../api/FirebaseApi";
 import { useUser } from "../hooks/userContext";
 
 export const AddCommentPage = ({ setAddComment, post, handleAddComment }) => {
   const [comment, setComment] = useState("");
   const [hasSpoilers, setSpoilers] = useState(false);
-  const user = useUser().user
+  const user = useUser().user;
 
   const Replybtn = async () => {
     try {
-      const newComment = await addComment(post.id, comment, user.email, hasSpoilers);
+      console.log(post);
+      const newComment = await addComment(
+        post.id,
+        comment,
+        user.email,
+        hasSpoilers
+      );
+      console.log(newComment);
       handleAddComment(newComment);
       setAddComment(false);
     } catch (error) {
       console.log(error.message);
     }
   };
+
   return (
     <div className="Add-Comment-Overlay">
       <button
@@ -41,17 +49,18 @@ export const AddCommentPage = ({ setAddComment, post, handleAddComment }) => {
           checked={!hasSpoilers}
           onChange={() => setSpoilers(false)}
         />
-        <label style={{color: "white"}}for="notSpoilers">Spoiler-Free</label>
+        <label htmlFor="notSpoilers">Spoiler-Free</label>
         <input
           type="radio"
           id="Spoilers"
           checked={hasSpoilers}
           onChange={() => setSpoilers(true)}
         />
-        <label style={{color: "white"}}for="notSpoilers">Contain Spoilers</label>
+        <label htmlFor="Spoilers">Contain Spoilers</label>
       </div>
-
-      <button onClick={Replybtn}className="Reply-Btn">Reply</button>
+      <button onClick={Replybtn} className="Reply-Btn">
+        Reply
+      </button>
     </div>
   );
 };

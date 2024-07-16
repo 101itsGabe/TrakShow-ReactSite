@@ -38,7 +38,7 @@ export const ShowPage = ({ setUserShows }) => {
   const btnAddShow = async () => {
     try {
       if (user != null && curShow != null) {
-        await addShow(user.email, curShow, episodes[0].name);
+        await addShow(user, curShow, episodes[0].name);
         const username = user.username;
         const shows = await getUserShows(username);
         setUserShows(shows);
@@ -68,8 +68,7 @@ export const ShowPage = ({ setUserShows }) => {
         //console.log(showData);
       } catch (error) {
         console.error("error", error);
-      }
-      finally{
+      } finally {
         setLoading(true);
       }
     };
@@ -112,48 +111,58 @@ export const ShowPage = ({ setUserShows }) => {
   return (
     <div>
       {loading ? (
-      curShow != null && (
-        <>
-          <div className="Show-Page">
-            <img src={curShow.image.original}></img>
-            <div>
-              <p style={{ fontSize: 20, fontWeight: "bold" }}>{curShow.name}</p>
-              <p>{curShow.status}</p>
-              <p>{curShow.rating.average}/10</p>
-              <p className="Show-Desc">{showDesc}</p>
-              <p>Episode length: {episodes.length}</p>
-              {isAdded ? <p>Choose Your Episode!</p> : <></>}
+        curShow != null && (
+          <>
+            <div className="Show-Page">
+              <img src={curShow.image.original}></img>
+              <div>
+                <p style={{ fontSize: 20, fontWeight: "bold" }}>
+                  {curShow.name}
+                </p>
+                <p>{curShow.status}</p>
+                <p>{curShow.rating.average}/10</p>
+                <p className="Show-Desc">{showDesc}</p>
+                <p>Episode length: {episodes.length}</p>
+                {isAdded ? <p>Choose Your Episode!</p> : <></>}
 
-              <div class="Ep-Scroll">
-                {episodes.map((item, index) => (
-                  <div
-                    onClick={() => {
-                      changeEp(item);
-                    }}
-                  >
-                    <div>
-                      <p>Season: {item.season}</p>
-                      <p>Episode: {item.number}</p>
-                      <p>{item.name}</p>
+                <div class="Ep-Scroll">
+                  {episodes.map((item, index) => (
+                    <div
+                      onClick={() => {
+                        changeEp(item);
+                      }}
+                    >
+                      <div>
+                        <p>Season: {item.season}</p>
+                        <p>Episode: {item.number}</p>
+                        <p>{item.name}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              {isAdded ? (
-                <div style={{ padding: 10 }}>
-                  <p style={{ color: "white" }}>Season: {curSeason} </p>
-                  <p style={{ color: "white" }}> Ep: {curEp}</p>
+                  ))}
                 </div>
-              ) : (
-                <button onClick={btnAddShow} className="Google-Btn" style={{margin: 10}}>
-                  Add Show +
-                </button>
-              )}
+                {isAdded ? (
+                  <div style={{ padding: 10 }}>
+                    <p style={{ color: "white" }}>Season: {curSeason} </p>
+                    <p style={{ color: "white" }}> Ep: {curEp}</p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={btnAddShow}
+                    className="Google-Btn"
+                    style={{ margin: 10 }}
+                  >
+                    Add Show +
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          </>
+        )
+      ) : (
+        <>
+          <BeatLoader color="white" />
         </>
-      ))
-              : <><BeatLoader color="white"/></>}
+      )}
     </div>
   );
 };

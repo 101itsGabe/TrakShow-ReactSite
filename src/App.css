@@ -2,14 +2,19 @@
   --main-bg-color: #213a61;
   --accent-btn-color: #305080;
   --user-show-color: rgb(225, 225, 225);
-  --dark-gray: #1e1e1e; /* New dark gray color */
-  --light-gray: #2a2a2a; /* Lighter shade of gray */
+  --header-color: rgba(0, 0, 0, 0.693);
+  --dark-gray: #1e1e1e;
+  --light-gray: #2a2a2a;
+  --primary-color: #ffffff; /* White color for text */
+  --secondary-color: #e0e0e0; /* Light gray for background elements */
+  --highlight-color: #4a90e2; /* Complementary blue for highlights */
+  --error-color: #ff6b6b; /* Error color for delete button */
 }
 
 .App {
   text-align: center;
   max-height: 100%;
-  background-color: #213a61;
+  background-color: var(--header-color);
 }
 
 .App button {
@@ -25,22 +30,32 @@
   max-height: calc(100vh - 180px); /* Set the maximum height */
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 10px;
+  background-color: var(--light-gray); /* Improved background color */
+  border-radius: 10px; /* Rounded corners */
+  margin: 20px 0; /* Add some margin */
 }
 
+/* Individual Comment */
 .Comment-Div {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 15px; /* Space between comments */
 }
 
 .Comment-Item {
-  border: 2px solid white; /* Correctly set the border property */
+  border: 2px solid var(--secondary-color); /* Correctly set the border property */
   border-radius: 10px;
   background-color: var(--accent-btn-color);
-  width: 80%;
-  height: auto; /* Adjust height to fit content */
+  width: 100%;
+  max-width: 800px; /* Max width for better readability */
   padding: 20px;
-  text-align: center; /* Centers all child elements */
+  text-align: left; /* Left align text */
+  position: relative; /* For positioning delete button */
+}
+
+.Comment-Item p {
+  margin: 5px 0; /* Consistent margin */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -50,14 +65,12 @@
 }
 
 .App-header {
-  background-color: #12294b;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -168,7 +181,7 @@
   display: flex;
   justify-content: left;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.693);
+  background-color: var(--main-bg-color);
   padding: 10px 10px;
   gap: 50px;
 }
@@ -240,7 +253,6 @@
   border-top: 1px solid #333;
 }
 
-
 /*Feed Css*/
 .feed-container {
   background-color: var(--dark-gray); /* Updated to dark gray */
@@ -257,13 +269,11 @@
   background-color: var(--light-gray); /* Updated to lighter shade of gray */
 }
 
-
-
 .tab-button {
   cursor: pointer;
   padding: 10px 20px;
   margin: 0 10px;
-  background-color: var(--accent-btn-color); 
+  background-color: var(--accent-btn-color);
   color: #f5f5f5;
   border: none;
   border-radius: 5px;
@@ -273,8 +283,6 @@
 .tab-button:hover {
   background-color: #555;
 }
-
-
 
 .comment {
   word-wrap: break-word;
@@ -293,6 +301,14 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
+}
+
+.user-info p {
+  cursor: pointer;
+}
+
+.user-info img {
+  cursor: pointer;
 }
 
 .user-info .avatar {
@@ -348,10 +364,12 @@
 .Finished-Scroll {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center; /* Center items horizontally */
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/*
 .Finished-Scroll div {
   background-color: var(--user-show-color);
   border-radius: 10px;
@@ -368,16 +386,108 @@
   font-size: 18px;
   font-weight: bold;
 }
+  */
+
+body {
+  background-color: var(--header-color);
+
+  color: var(--user-show-color);
+
+  font-family: Arial, sans-serif;
+}
+
+.show-count {
+  color: var(--highlight-color);
+  font-weight: bold;
+  text-align: center;
+}
 
 .Show-Scroll {
   display: flex;
   flex-wrap: wrap;
-  /* Allow items to wrap to the next line */
-  gap: 5px;
-  justify-content: center; /* Center the items horizontally */
-  align-items: center;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
+.show-item {
+  background-color: var(--dark-gray);
+  color: var(--highlight-color);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.show-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.show-item img {
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+}
+
+.show-details {
+  margin-top: 10px;
+}
+
+.show-details p {
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.show-actions {
+  margin-top: 10px;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.navigation-buttons button {
+  background-color: var(--primary-color);
+  color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navigation-buttons button:hover {
+  background-color: var(--hover-color);
+}
+
+.delete-btn {
+  background-color: var(--secondary-color);
+  color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: var(--hover-color);
+}
+
+.no-shows-message {
+  color: var(--highlight-color);
+  font-size: 16px;
+  text-align: center;
+}
+
+/*
 .Show-Scroll div {
   background-color: var(--user-show-color);
   color: #1c1c1ce4;
@@ -393,7 +503,7 @@
   font-size: 18px;
   font-weight: bold;
 }
-
+*/
 .User-Content {
   display: flex;
   justify-content: center;
@@ -433,7 +543,6 @@
   margin: 2px;
   /* Adjust margin as needed */
 }
-
 
 .sign-in-input {
   display: flex;
@@ -485,23 +594,26 @@
   box-sizing: border-box;
   /* Ensure padding and border are included in the element's total width and height */
   font-size: 20px;
-  background-color: #305080;
+  background-color: var(--accent-btn-color);
   color: white;
   margin: 15px;
 }
-
 .follow-btn {
-  border-radius: 10px;
-  width: 120px;
-  height: 40px;
-  padding: 5px;
-  background-color: #f0f0f0;
-  border-color: #dcdcdc;
+  background-color: var(--primary-color);
+  color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.follow-btn:active {
-  background-color: #d0d0d0;
+.follow-btn.active {
+  background-color: var(--secondary-color);
+}
+
+.follow-btn:hover {
+  background-color: var(--hover-color);
 }
 
 .header-btn-search {
@@ -548,15 +660,23 @@
   margin-bottom: 5px;
   background-color: transparent;
   border: transparent;
+  max-width: 30%;
+  max-height: 25%;
 }
 
 .header-btn button:hover {
   border-radius: 10px;
-  background-color: var(--accent-btn-color);
+  background-color: rgba(17, 17, 99, 0.679);
 }
 
+/* Background overlay for AddCommentPage */
 .Add-Comment-Background {
-  background-color: #2f2f2f6d; /* Light gray with some transparency */
+  background-color: rgba(
+    47,
+    47,
+    47,
+    0.43
+  ); /* Light gray with some transparency */
   position: fixed; /* Use fixed positioning to cover the whole viewport */
   top: 0;
   left: 0;
@@ -569,9 +689,10 @@
 }
 
 .Add-Comment-Overlay {
-  background-color: rgb(69, 67, 67);
-  width: 35%;
-  height: 45%;
+  background-color: var(--dark-gray);
+  width: 90%;
+  max-width: 600px; /* Max width for better readability */
+  padding: 20px; /* Add some padding */
   display: flex;
   flex-direction: column; /* Ensures items stack vertically */
   justify-content: center;
@@ -583,68 +704,75 @@
 .Add-Comment-Overlay-btn {
   position: absolute;
   top: 10px;
-  left: 10px; /* Move the button to the top right */
-  color: black;
+  right: 10px; /* Move the button to the top right */
+  color: var(--primary-color);
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
 }
 
+/* Reply Button */
 .Reply-Btn {
-  position: relative;
-  width: 25%;
-  height: 10%;
-  left: 30%;
-  top: 5%;
-  background-color: #2c4770;
+  width: 100%;
+  max-width: 200px; /* Fixed max width */
+  padding: 10px;
+  background-color: var(--highlight-color);
   border-radius: 10px;
-  color: white;
+  color: var(--primary-color);
   font-size: 16px;
   cursor: pointer;
+  margin-top: 10px; /* Margin above the button */
 }
 
+/* Radio button container */
 .radio-btn {
   display: flex;
   justify-content: space-around;
-  position: relative;
-  bottom: 1%;
-  width: 50%;
+  width: 100%;
+  margin: 10px 0; /* Margin around the radio buttons */
 }
 
 .radio-btn input {
-  color: white;
+  margin-right: 5px; /* Space between radio button and label */
 }
 
+.radio-btn label {
+  color: var(--primary-color); /* White color for labels */
+}
+
+/* Text area for adding comments */
 .Add-Comment-Overlay textarea {
   border-radius: 10px;
-  position: inherit;
-  width: 60%;
-  height: 60%;
+  width: 80%; /* Adjusted width */
+  height: 150px; /* Fixed height */
+  padding: 10px; /* Adjusted padding */
   font-size: 16px;
+  margin-top: 20px; /* Adjusted margin */
 }
 
-.radio-btn {
-  position: absolute;
-  bottom: 10%;
-  left: 0%;
-}
-
-.Delete-Btn {
-  cursor: pointer;
-}
-
+/* Spoiler Button */
 .Spoiler-Btn {
   display: flex;
-  direction: row;
+  align-items: center;
+  justify-content: center;
   padding: 5px;
-  background-color: lightgray;
+  background-color: var(--secondary-color);
   border-radius: 10px;
   cursor: pointer;
-  justify-content: center; /* Centers items horizontally */
-  align-items: center; /* Centers items vertically */
-  gap: 5px; /* Optional: adds space between icon and text */
-  position: relative;
+  margin-top: 10px; /* Margin above the spoiler button */
+  gap: 5px; /* Adds space between icon and text */
+}
+/* Delete Button */
+.Delete-Btn {
+  position: absolute; /* Position inside the comment item */
+  top: 10px;
+  right: 10px; /* Top right corner */
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--error-color); /* Red color for delete button */
+  font-size: 16px;
 }
 
 .Users-Btn {
@@ -685,7 +813,7 @@
   font-size: 20px;
 }
 
-.Delete-Overlay{
+.Delete-Overlay {
   position: fixed;
   z-index: 0;
   top: 30%;
@@ -697,28 +825,32 @@
   justify-content: center;
 }
 
-.Delete-Overlay-button{
+.Delete-Overlay-button {
   width: 15%;
   height: 15%;
   top: 10px;
   right: 10px;
 }
 
+.default-photo {
+  width: 80px;
+  height: 80px;
+}
+
 /* Media query for smaller screens */
 @media (max-width: 768px) {
-
-  .sign-in{
+  .sign-in {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center-align items horizontally */
     padding: 20px; /* Adjust padding as needed */
   }
 
-  .sign-in img{
+  .sign-in img {
     width: 80%;
   }
 
-  .sign-in-input div input{
+  .sign-in-input div input {
     width: 100%;
   }
   .sign-up-container input {

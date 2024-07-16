@@ -7,7 +7,7 @@ import {
   unfollowUser,
   checkIfFollowing,
   getFollowingList,
-  getUsername
+  getUsername,
 } from "../api/FirebaseApi";
 import { useNavigate } from "react-router-dom";
 import { getEps, getShow } from "../api/TVShowApi";
@@ -20,7 +20,7 @@ import {
   PanoramaRounded,
 } from "@mui/icons-material";
 import { useUser } from "../hooks/userContext";
-import defaultPhoto  from "../images/index.png";
+import defaultPhoto from "../images/index.png";
 
 export function UserPage({ userShows, setUserShows }) {
   const [shows, setShows] = useState([]); // Declare shows as a state variable
@@ -46,7 +46,6 @@ export function UserPage({ userShows, setUserShows }) {
     let notFin = [];
 
     const fetchData = async () => {
-
       try {
         if (user) {
           const username = user.username;
@@ -59,7 +58,7 @@ export function UserPage({ userShows, setUserShows }) {
               curShows = await getUserShows(params.username);
               setMyShow(false);
               const otherUser = await getUsername(params.username);
-              if(otherUser){
+              if (otherUser) {
                 setPageUser(otherUser);
               }
             }
@@ -93,16 +92,14 @@ export function UserPage({ userShows, setUserShows }) {
               pageUser.email
             );
             setFollowing(ifFollowing);
-          }
-          else{
-
-          if (followingList.length === 0) {
-            const curFollow = await getFollowingList(user.email);
-            if (curFollow != null && followingList.length == 0) {
-              setFollowingList(curFollow);
+          } else {
+            if (followingList.length === 0) {
+              const curFollow = await getFollowingList(user.email);
+              if (curFollow != null && followingList.length == 0) {
+                setFollowingList(curFollow);
+              }
             }
           }
-        }
         }
       } catch (error) {
         console.log(error);
@@ -236,44 +233,39 @@ export function UserPage({ userShows, setUserShows }) {
 
   const curWatching = () => (
     <>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {isMyShow ? null : (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <p style={{ color: "white", margin: 10 }}>{params.username}</p>
-            {isFollowing ? (
-              <button className="follow-btn active" onClick={followBtn}>
-                Following
-              </button>
-            ) : (
-              <button className="follow-btn" onClick={followBtn}>
-                Follow +
-              </button>
-            )}
+      <div className="user-info">
+        {!isMyShow && (
+          <div className="user-details">
+            <p className="username">{params.username}</p>
+            <button
+              className={`follow-btn ${isFollowing ? "active" : ""}`}
+              onClick={followBtn}
+            >
+              {isFollowing ? "Following" : "Follow +"}
+            </button>
           </div>
         )}
       </div>
-      <p style={{ color: "white", fontWeight: "bold" }}>{shows.length} Shows</p>
+      <p className="show-count">{shows.length} Shows</p>
       <div className="Show-Scroll">
         {shows.map((item, index) => (
-          <div key={index}>
+          <div key={index} className="show-item">
             <button
               className="Show-Scroll-Img"
               onClick={() => gotopage(item.id, item.curEp, item.curSeason)}
             >
               <img src={item.imgUrl} alt={item.name} />
             </button>
-            <div>
+            <div className="show-details">
               <p>{item.name}</p>
-            </div>
-            <div>
               <p>
-                S{item.curSeason} | EP{item.curEp}{" "}
+                S{item.curSeason} | EP{item.curEp}
               </p>
               <p>{item.curEpName}</p>
             </div>
             {isMyShow && (
-              <div>
-                <div>
+              <div className="show-actions">
+                <div className="navigation-buttons">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -292,6 +284,7 @@ export function UserPage({ userShows, setUserShows }) {
                   </button>
                 </div>
                 <button
+                  className="delete-btn"
                   onClick={(e) => {
                     e.stopPropagation();
                     removeShow(item);
@@ -308,26 +301,28 @@ export function UserPage({ userShows, setUserShows }) {
   );
 
   const curFinishedShows = () => (
-    <div>
+    <div className="user-content">
       <div>
         {finishedShows.length !== 0 ? (
           <div>
-            <p style={{ color: "white" }}>{finishedShows.length} Shows</p>
+            <p className="show-count">{finishedShows.length} Shows</p>
             <div className="Finished-Scroll">
               {finishedShows.map((item, index) => (
-                <div key={index}>
+                <div key={index} className="show-item">
                   <button
+                    className="Show-Scroll-Img"
                     onClick={() =>
                       gotopage(item.id, item.curEp, item.curSeason)
                     }
                   >
                     <img src={item.imgUrl} alt={item.name} />
                   </button>
-                  <div>
+                  <div className="show-details">
                     <p>{item.name}</p>
                   </div>
                   {isMyShow && (
                     <button
+                      className="delete-btn"
                       onClick={(e) => {
                         e.stopPropagation();
                         removeShow(item);
@@ -341,9 +336,7 @@ export function UserPage({ userShows, setUserShows }) {
             </div>
           </div>
         ) : (
-          <p style={{ color: "white", fontSize: 16 }}>
-            No finished shows to display.
-          </p>
+          <p className="no-shows-message">No finished shows to display.</p>
         )}
       </div>
     </div>
@@ -351,14 +344,14 @@ export function UserPage({ userShows, setUserShows }) {
 
   const curFollowList = () => (
     <div className="User-Container">
-          <div className="User-Scroll">
-      {followingList.map((item, index) => (
-        <div key={index}>
-          <button className="User-Btn" onClick={() => gotoUser(item)}>
-            <p style={{ color: "white" }}>{item.username}</p>
-          </button>
-        </div>
-      ))}
+      <div className="User-Scroll">
+        {followingList.map((item, index) => (
+          <div key={index}>
+            <button className="User-Btn" onClick={() => gotoUser(item)}>
+              <p style={{ color: "white" }}>{item.username}</p>
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -382,16 +375,21 @@ export function UserPage({ userShows, setUserShows }) {
         </>
       ) : (
         <>
-        <div>
-          {user.photoURL === "" || user.photoURL === null ?
-          <div><img src={defaultPhoto}/></div>
-          :
           <div>
-          <img src={user.photoURL}></img>
+            {user.photoURL === "" ||
+            user.photoURL === null ||
+            user.photoURL === "src/images/index.png" ? (
+              <div>
+                <img className="default-photo" src={defaultPhoto} />
+              </div>
+            ) : (
+              <div>
+                <p>other</p>
+                <img src={user.photoUrl}></img>
+              </div>
+            )}
+            <p>{user.username}</p>
           </div>
-        }
-          <p>{user.username}</p>
-        </div>
           <div className="Users-Btn">
             <div onClick={() => handleType(0)}>Currently Watching</div>
             <div onClick={() => handleType(1)}>Finished Shows</div>

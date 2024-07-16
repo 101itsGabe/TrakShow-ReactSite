@@ -2,6 +2,12 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { signOutUser } from "../api/FirebaseApi";
 import React, { useState, useEffect } from "react";
 import logo from "../images/logo.png";
+import { BsSearch } from "react-icons/bs";
+import { FaSearch } from "react-icons/fa";
+import { PiTelevisionBold } from "react-icons/pi";
+import { CgFeed } from "react-icons/cg";
+import { IoIosSettings } from "react-icons/io";
+import { FaSignOutAlt } from "react-icons/fa";
 
 export const Header = ({ user, setUser }) => {
   const [isMenuToggle, setMenuToggle] = useState(false);
@@ -25,7 +31,7 @@ export const Header = ({ user, setUser }) => {
     }
   };
 
-  const navToSettings = () =>{
+  const navToSettings = () => {
     nav("/settings/user/" + user.username);
   };
 
@@ -58,33 +64,35 @@ export const Header = ({ user, setUser }) => {
               navToSearch(false);
             }}
           >
-            Search
+            <FaSearch />
           </button>
           <button
             onClick={() => {
               navToShows(false);
             }}
           >
-            My Shows
+            <PiTelevisionBold />
           </button>
           <button
             onClick={() => {
               navToFeed(false);
             }}
           >
-            My Feed
+            <CgFeed />
           </button>
-          <button onClick={() => {
-            navToSettings();
-          }}>
-            Settings
+          <button
+            onClick={() => {
+              navToSettings();
+            }}
+          >
+            <IoIosSettings />
           </button>
           <button
             onClick={() => {
               navToSignin(false);
             }}
           >
-            SignOut
+            <FaSignOutAlt />
           </button>
         </div>
       </div>
@@ -121,8 +129,12 @@ export const Header = ({ user, setUser }) => {
             >
               Feed
             </button>
-            <button className="Menu-barbtn" onClick={() => {
-            navToSettings();}}>
+            <button
+              className="Menu-barbtn"
+              onClick={() => {
+                navToSettings();
+              }}
+            >
               Settings
             </button>
             <button

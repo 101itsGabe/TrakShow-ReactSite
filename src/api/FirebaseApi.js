@@ -54,7 +54,7 @@ setPersistence(auth, browserLocalPersistence)
   })
   .catch((error) => {
     console.error("Error setting persistence:", error);
-});
+  });
 
 //User Functions
 
@@ -111,7 +111,7 @@ export async function signUpUser(email, password, username) {
         email: user.email,
         followercount: 0,
         username: username,
-        photoURL: "src/images/index.png"
+        photoURL: "src/images/index.png",
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
       const followingCollection = collection(newdoc, "following");
@@ -168,6 +168,15 @@ export async function googleSignIn() {
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
       curData = doc.data();
+      if (!("photoUrl" in curData)) {
+        let newData = null;
+        if (user.photoURL !== "" || user.photoURL !== null) {
+          newData = { ...curData, photoUrl: user.photoURL }; // Replace 'url_of_the_photo' with the actual URL or value you need
+        } else {
+          newData = { ...curData, photoUrl: "src/images/index.png" };
+        }
+        await updateDoc(doc.ref, newData);
+      }
     } else {
       const usersCollection = collection(db, "Users");
       const usernameStr = user.email.split("@")[0];
@@ -175,7 +184,7 @@ export async function googleSignIn() {
         email: user.email,
         followercount: 0,
         username: usernameStr,
-        photoURL: user.photoURL
+        photoURL: user.photoURL,
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
       const followingCollection = collection(newdoc, "following");
@@ -373,7 +382,6 @@ export async function deleteComment(postID, commentID) {
 }
 
 export async function addLike(email, post) {
-  
   try {
     const feedCollection = collection(db, "UserFeed");
     const feedQ = query(feedCollection, where("id", "==", post.id));
@@ -583,53 +591,39 @@ export async function getFeed(
   if (feedQuery !== null) {
     let isLiked = false;
     const feedSnapshot = await getDocs(feedQuery);
-    /*
-    if(feedSnapshot.docs.length > 0){
-    const likesDoc = feedSnapshot.docs[0];
-      const likeCollection = collection(likesDoc.ref, "likeList");
-      const likeQ = query(likeCollection, where("email", "==", user.email));
-      const likesSnapshot = await getDocs(likeQ);
-      if (!likesSnapshot.empty) {
-        const likeDoc = likesSnapshot.docs[0];
-        console.log("Liked by us");
-        console.log(likeDoc.data());
-        isLiked = true;
-      }
-      else{
-        console.log("Not liked us");
-      }
-    }
-    */
+
     if (!feedSnapshot.empty) {
-      feedSnapshot.forEach(async (doc) => {
+      const feedPromises = feedSnapshot.docs.map(async (doc) => {
         try {
+          let isLiked = false;
           const likeCollection = collection(doc.ref, "likeList");
           const likeQ = query(likeCollection, where("email", "==", user.email));
           const likesSnapshot = await getDocs(likeQ);
           if (!likesSnapshot.empty) {
-            const likeDoc = likesSnapshot.docs[0];
-            console.log("Liked by us");
-            console.log(likeDoc.data());
             isLiked = true;
           }
-          else{
-            console.log("Not liked us");
-          }
           let data = doc.data();
-          feedList.push({post: data, liked: isLiked});
+          return { post: data, liked: isLiked };
         } catch (error) {
-          console.og("Error");
+          console.log("Error:", error);
+          return null;
         }
       });
+
+      feedList = await Promise.all(feedPromises);
+      // Filter out any null values in case of errors
+      feedList = feedList.filter((item) => item !== null);
     } else {
       console.log("its empty");
-      return feedList;
     }
   }
+
+  //This is where you left off Fixing feed list because its returning null for some reason
   return feedList;
 }
 
 export async function addShow(user, curShow, epName) {
+  console.log("Hello");
   try {
     const userCollection = collection(db, "Users");
     let ifContains = false;
@@ -674,7 +668,6 @@ export async function addShow(user, curShow, epName) {
 }
 
 export async function addPost(user, show, ep) {
-  console.log("Adding Post", user);
   try {
     const userCollection = collection(db, "UserFeed");
     let curComment;
@@ -687,12 +680,12 @@ export async function addPost(user, show, ep) {
 
     let photoStr = "";
 
-    if (user.photoURL && user.photoURL !== "") {
-      photoStr = user.photoURL;
+    if (user.photoUrl && user.photoUrl !== "") {
+      photoStr = user.photoUrl;
     } else {
       photoStr = "src/images/index.png";
     }
-    
+
     console.log(photoStr);
     const docRef = await addDoc(userCollection, {
       comment: curComment,
@@ -700,7 +693,7 @@ export async function addPost(user, show, ep) {
       likes: 0,
       timestamp: serverTimestamp(),
       username: user.username,
-      photoURL: photoStr
+      photoUrl: photoStr,
     });
 
     await setDoc(docRef, { id: docRef.id }, { merge: true });
@@ -730,33 +723,35 @@ export async function changeUsername(email, username) {
   }
 }
 
-export async function deleteAccount(email){
-  try{
+export async function deleteAccount(email) {
+  try {
     const usersCollection = collection(db, "Users");
     const q = query(usersCollection, where("email", "==", email));
     const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty){
+    if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
       await deleteDoc(userDoc.ref);
       const user = auth.currentUser;
       if (user) {
-        user.delete().then(() => {
-            console.log('User account deleted.');
+        user
+          .delete()
+          .then(() => {
+            console.log("User account deleted.");
             // Redirect to a different page or show a success message
           })
           .catch((error) => {
-            console.error('Error deleting user:', error);
+            console.error("Error deleting user:", error);
             // Handle the error, possibly show an error message to the user
           });
+      }
+    } else {
+      console.log("No User");
     }
-  }
-  else{
-    console.log("No User");
-  }
-  }
-  catch(error){
+  } catch (error) {
     console.log(error.message);
   }
 }
+
+//backend updating function{}
 
 export { app, analytics, db };
