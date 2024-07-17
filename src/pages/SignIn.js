@@ -96,7 +96,6 @@ export const SignIn = ({ setUserShow }) => {
       <div style={{ padding: 20 }}>
         <button
           className="Google-Btn"
-          style={{ padding: 10 }}
           onClick={btnSignIn}
         >
           <img

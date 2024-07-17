@@ -64,40 +64,50 @@ export const Header = ({ user, setUser }) => {
               navToSearch(false);
             }}
           >
+            <div className="stacked-container">
             <FaSearch />
-            Search
+            <p>Search</p>
+            </div>
           </button>
           <button
             onClick={() => {
               navToShows(false);
             }}
           >
-            <PiTelevisionBold />
-            Shows
+           <div className="stacked-container">
+              <PiTelevisionBold />
+              <p>Shows</p>
+            </div>
           </button>
           <button
             onClick={() => {
               navToFeed(false);
             }}
           >
-            <CgFeed />
-            Feed
+            <div className="stacked-container">
+              <CgFeed/>
+              <p>Feed</p>
+              </div>
           </button>
           <button
             onClick={() => {
               navToSettings();
             }}
           >
-            <IoIosSettings />
-            Settings
+            <div className="stacked-container">
+              <IoIosSettings />
+              <p>Settings</p>
+              </div>
           </button>
           <button
             onClick={() => {
               navToSignin(false);
             }}
           >
+            <div className="stacked-container">
             <FaSignOutAlt />
-            Sign-Out
+            <p>Sign-Out</p>
+            </div>
           </button>
         </div>
       </div>
@@ -116,8 +126,10 @@ export const Header = ({ user, setUser }) => {
                 navToShows(true);
               }}
             >
+              <div className="stacked-container">
               <PiTelevisionBold />
-              Shows
+              <p>Shows</p>
+              </div>
             </button>
             <button
               className="Menu-barbtn"
@@ -125,8 +137,10 @@ export const Header = ({ user, setUser }) => {
                 navToSearch(true);
               }}
             >
+              <div className="stacked-container">
               <FaSearch />
-              Search
+              <p>Search</p>
+              </div>
             </button>
             <button
               className="Menu-barbtn"
@@ -134,8 +148,10 @@ export const Header = ({ user, setUser }) => {
                 navToFeed(true);
               }}
             >
-              <CgFeed />
-              Feed
+              <div className="stacked-container">
+              <CgFeed/>
+              <p>Feed</p>
+              </div>
             </button>
             <button
               className="Menu-barbtn"
@@ -143,8 +159,10 @@ export const Header = ({ user, setUser }) => {
                 navToSettings();
               }}
             >
+              <div className="stacked-container">
               <IoIosSettings />
-              Settings
+              <p>Settings</p>
+              </div>
             </button>
             <button
               className="Menu-barbtn"
@@ -152,8 +170,10 @@ export const Header = ({ user, setUser }) => {
                 navToSignin(true);
               }}
             >
+              <div className="stacked-container">
               <FaSignOutAlt />
-              Sign Out
+             <p>Sign Out</p>
+              </div>
             </button>
           </div>
         </div>

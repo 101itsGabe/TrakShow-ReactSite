@@ -152,7 +152,7 @@ export const FeedPage = () => {
               scrollableTarget="scrollableDiv"
               loader={
                 <div>
-                  <BeatLoader style={{ color: "white" }} />
+                  <BeatLoader color="white" />
                   <p style={{ color: "white" }}>Loading...</p>
                 </div>
               }
@@ -162,7 +162,6 @@ export const FeedPage = () => {
                 //const isLiked = false;
                 return (
                   <div key={index} className="feed-item">
-                    <p className="comment">{item.post.comment}</p>
                     <div className="user-info">
 
                       {!item.post.photoUrl||
@@ -187,8 +186,10 @@ export const FeedPage = () => {
                       />
                       <p>{item.post.username}</p>
                     </div>
+                    
                       )}
                     </div>
+                    <p className="comment">{item.post.comment}</p>
                     <div className="actions">
                       <button
                         onClick={() => addLikeBtn(item)}
@@ -219,7 +220,7 @@ export const FeedPage = () => {
               scrollableTarget="scrollableDiv"
               loader={
                 <div>
-                  <BeatLoader style={{ color: "white" }} />
+                  <BeatLoader color="white" />
                   <p style={{ color: "white" }}>Loading...</p>
                 </div>
               }
@@ -230,7 +231,6 @@ export const FeedPage = () => {
 
                 return (
                   <div key={index} className="feed-item">
-                    <p className="comment">{item.post.comment}</p>
                     <div
                       className="user-info"
                       onClick={() => {
@@ -244,6 +244,7 @@ export const FeedPage = () => {
                       />
                       <p>{item.post.username}</p>
                     </div>
+                    <p className="comment">{item.post.comment}</p>
                     <div className="actions">
                       <button
                         onClick={() => addLikeBtn(item)}

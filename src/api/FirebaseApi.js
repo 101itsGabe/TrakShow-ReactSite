@@ -81,12 +81,34 @@ export async function getUsername(username) {
     return null;
   }
 }
+
+export async function searchUsernames(username){
+  let users = []
+  const userCollection = collection(db, "Users");
+  const userQuery = query(userCollection, 
+  where('username', '>=', username),
+  where('username', '<=', username + '\uf8ff'))
+  const querySnapshot = await getDocs(userQuery);
+  if(querySnapshot !== null){
+    querySnapshot.docs.forEach(doc => {
+      users.push(doc.data());
+    });
+  }
+
+  return users;
+
+
+}
 export async function getUsers() {
   const usersCollection = collection(db, "Users");
-  const usersSnapshot = await getDocs(usersCollection);
-  const usersList = usersSnapshot.docs.map((doc) => doc.data());
+  const userQuery = query(usersCollection, limit(50))
+  const querySnapshot = await getDocs(userQuery);
+  //const usersSnapshot = await getDocs(usersCollection);
+  if(querySnapshot){
+  const usersList = querySnapshot.docs.map((doc) => doc.data());
   //const realList = usersList.map((user) => user.email);
   return usersList;
+  }
 }
 
 export async function signUpUser(email, password, username) {
@@ -231,6 +253,10 @@ export async function updateEp(user, curShow, newEp, epIndex) {
         };
         await updateDoc(showDoc.ref, newValues);
         await addPost(user, curShow, newEp);
+        const updatedDoc = await getDoc(showDoc.ref);
+        if(updatedDoc){
+          return updatedDoc;
+        }
       }
     }
   } catch (error) {
@@ -251,7 +277,7 @@ export async function getUserShows(username) {
       const userTvShowCollection = collection(doc.ref, "tvshows");
       const userTvShowsQuery = query(
         userTvShowCollection,
-        orderBy("timestamp", "desc")
+        orderBy("name", "asc")
       );
       const userTvShowsSnapshot = await getDocs(userTvShowsQuery);
       userTvShowsSnapshot.docs.forEach((showDoc) => {
@@ -675,7 +701,7 @@ export async function addPost(user, show, ep) {
     if (ep.number === 1 && ep.season === 1) {
       curComment = `${user.username} just added ${show.name} to their list!`;
     } else {
-      curComment = `${user.username} just got the next episode of ${show.name}, EP: ${ep.number}, Season: ${ep.season}, ${ep.name}!`;
+      curComment = `${user.username} just got the next episode of ${show.name}, Season: ${ep.season} EP: ${ep.number}, ${ep.name}!`;
     }
 
     let photoStr = "";

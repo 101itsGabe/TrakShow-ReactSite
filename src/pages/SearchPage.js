@@ -1,7 +1,7 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import TVShowApi, { getSearch } from "../api/TVShowApi";
-import { getUsers } from "../api/FirebaseApi";
+import { getUsers, searchUsernames } from "../api/FirebaseApi";
 import { Header } from "../pages/Header";
 import "../App.css";
 import { setLogLevel } from "firebase/app";
@@ -16,13 +16,12 @@ import { colors } from "@mui/material";
 export const SearchPage = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State for the search term
   const [searchResults, setSearchResults] = useState([]); // State to store search results
-  const [recResult, setRec] = useState([]);
   const [typeSearch, setType] = useState(true);
-  const [showBtn, setShowBtn] = useState(true);
   const [userList, setList] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [curPage, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [userSearchTerm, setUserSearch] = useState("")
   const nav = useNavigate();
 
   useEffect(() => {
@@ -41,6 +40,23 @@ export const SearchPage = ({ user }) => {
       console.error("Error fetching search results:", error);
     }
   };
+
+  const handleUserSearch = async (s) => {
+    try{
+      if(s !== ""){
+      const searchedUsers = await searchUsernames(s);
+      console.log(searchedUsers);
+      setList(searchedUsers);
+      }
+      else{
+        const userRes = await getUsers();
+        setList(userRes);
+      }
+    }
+    catch(error){
+      console.log(error.message);
+    }
+  }
 
   const handleNextPage = async (type) => {
     let pageNum;
@@ -79,12 +95,22 @@ export const SearchPage = ({ user }) => {
   };
 
   const handleKeyDown = async (event) => {
+
     if (event.key === "Enter") {
+      if(typeSearch){
       try {
         await handleSearch(event.target.value);
       } catch (error) {
         console.log(error.message);
       }
+    }
+    else{
+      try{
+        await handleUserSearch(event.target.value);
+      } catch(error){
+        console.log(error.message);
+      }
+    }
     }
   };
 
@@ -122,6 +148,7 @@ export const SearchPage = ({ user }) => {
   return (
     <div>
       {loading ? <>
+      {typeSearch ? <div>
       <input
         type="text"
         value={searchTerm}
@@ -130,6 +157,16 @@ export const SearchPage = ({ user }) => {
         placeholder="Search show name..."
         className="search-bar"
       />
+      </div> : <>
+      <input
+        type="text"
+        value={userSearchTerm}
+        onChange={(e) => setUserSearch(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Search username..."
+        className="search-bar"
+      />
+      </>}
 
       <div className="header-btn-search">
         <button onClick={() => handleType(true)}>Shows</button>
@@ -165,7 +202,7 @@ export const SearchPage = ({ user }) => {
                   <span>No Image Available</span>
                 )}
               </button>
-              <p style={{ color: "white" }}> {item.name || item.show.name}</p>
+              <p style={{ color: "white", fontWeight: "bold" }}> {item.name || item.show.name}</p>
             </div>
           ))}
         </div>

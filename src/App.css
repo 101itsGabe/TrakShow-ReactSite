@@ -14,7 +14,7 @@
 
 .App {
   text-align: center;
-  max-height: 100%;
+  min-height: 100vh;
   background-color: var(--header-color);
 }
 
@@ -88,7 +88,7 @@
   padding-right: 50px;
   max-height: 100%;
   display: grid;
-  gap: 0px;
+  gap: 20px;
   /* Space between items */
   grid-template-columns: repeat(auto-fill, minmax(250px, 2fr));
 }
@@ -97,7 +97,7 @@
   background-color: transparent;
   cursor: pointer;
   border: none;
-  /* Remove the default border */
+  /* Remove the default border */ 
   border-radius: 10px;
   border-width: 1px;
   transition: background-color 0.05s ease, transform 0.05s ease;
@@ -227,6 +227,7 @@
   overflow-y: scroll;
   width: 80%;
   margin-left: 10%;
+  border-radius: 5px;
   border: 2px solid #d0d0d0;
 }
 
@@ -302,6 +303,7 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
+  padding: 10px;
 }
 
 .user-info p {
@@ -316,11 +318,12 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .user-info p {
-  margin: 0;
+  margin-top: 5px;
+  
 }
 
 .actions {
@@ -369,25 +372,6 @@
   justify-content: center;
   align-items: flex-start;
 }
-
-/*
-.Finished-Scroll div {
-  background-color: var(--user-show-color);
-  border-radius: 10px;
-  padding: 5px;
-}
-
-.Finished-Scroll div img {
-  border-radius: 10px;
-}
-.Finished-Scroll div p {
-  background-color: var(--user-show-color);
-  border-radius: 10px;
-  padding: 5px;
-  font-size: 18px;
-  font-weight: bold;
-}
-  */
 
 body {
   background-color: var(--header-color);
@@ -526,7 +510,7 @@ body {
   /* Three items per row with some gap */
   max-width: calc(33.33% - 30px);
   /* Adjust based on the number of items you want per row */
-  margin: 2px;
+  margin: 4px;
   /* Adjust margin as needed */
 }
 
@@ -766,9 +750,8 @@ body {
 .Users-Btn {
   display: flex;
   flex-direction: row;
-  padding-top: 30;
+  padding-top: 0px;
   border-radius: 10px;
-  padding: 20px;
   gap: 20px;
   justify-content: center; /* Centers items horizontally */
   align-items: center; /* Centers items vertically */
@@ -835,6 +818,17 @@ body {
 
 .user-info p{
   padding-top: 25px;
+}
+
+.stacked-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Optional: Center the items horizontally */
+  justify-content: center; /* Optional: Center the items vertically */
+}
+.stacked-container p {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
 }
 
 

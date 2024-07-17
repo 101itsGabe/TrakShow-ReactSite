@@ -95,7 +95,7 @@ export const ShowPage = ({ setUserShows }) => {
         (ep) => item.number == ep.number && item.season == ep.season
       );
       try {
-        await updateEp(user.email, curShow, item, index);
+        await updateEp(user, curShow, item, index);
         setEp(item.number);
         setSeason(item.season);
         const username = user.username;

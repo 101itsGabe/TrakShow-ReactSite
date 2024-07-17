@@ -10,6 +10,8 @@ export const SettingsPage = () => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [cofirm, setConfirm] = useState(false);
+  const [imageFile, setFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState("")
 
   useEffect(() => {
     if (user != null) {
@@ -24,6 +26,10 @@ export const SettingsPage = () => {
   const handleUsername = (e) => {
     setUserName(e.target.value);
   };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  }
   const saveUsername = async () => {
     try {
       await changeUsername(user.email, username);
@@ -92,6 +98,10 @@ export const SettingsPage = () => {
         </div>
       )}
       <p style={{ color: "white" }}>Email: {email}</p>
+      <input 
+        type="file"
+        onChange={handleFileChange}
+      />
       <button
         className="Google-Btn"
         style={{ backgroundColor: "red", color: "white" }}

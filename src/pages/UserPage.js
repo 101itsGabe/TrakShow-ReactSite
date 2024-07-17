@@ -185,6 +185,7 @@ export function UserPage({ userShows, setUserShows }) {
   const updateCurEp = async (firebaseShow, ifUp) => {
     let finShow = [];
     let notFin = [];
+    let updatedShows= []
     try {
       const episodes = await getEps(firebaseShow.id);
       const show = await getShow(firebaseShow.id);
@@ -202,13 +203,17 @@ export function UserPage({ userShows, setUserShows }) {
         }
 
         const ep = episodes[curEp];
-        await updateEp(user, show, ep, curEp);
+        const newDoc = await updateEp(user, show, ep, curEp);
+        const newData = newDoc.data();
+        updatedShows = shows.map((show) =>
+          show.id === newData.id ? newData : show);
+        setShows(updatedShows);
+        
+
       }
-      // Now fetch the updated user shows
-      const curShows = await getUserShows(user.username);
 
       const allEpisodes = await Promise.all(
-        curShows.map(async (show) => {
+        updatedShows.map(async (show) => {
           const episodes = await getEps(show.id);
           const lastEp = episodes[episodes.length - 1];
           if (
