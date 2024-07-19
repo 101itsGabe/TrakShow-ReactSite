@@ -185,7 +185,7 @@ export function UserPage({ userShows, setUserShows }) {
   const updateCurEp = async (firebaseShow, ifUp) => {
     let finShow = [];
     let notFin = [];
-    let updatedShows= []
+    let updatedShows = [];
     try {
       const episodes = await getEps(firebaseShow.id);
       const show = await getShow(firebaseShow.id);
@@ -206,10 +206,9 @@ export function UserPage({ userShows, setUserShows }) {
         const newDoc = await updateEp(user, show, ep, curEp);
         const newData = newDoc.data();
         updatedShows = shows.map((show) =>
-          show.id === newData.id ? newData : show);
+          show.id === newData.id ? newData : show
+        );
         setShows(updatedShows);
-        
-
       }
 
       const allEpisodes = await Promise.all(
@@ -245,6 +244,7 @@ export function UserPage({ userShows, setUserShows }) {
             <button
               className="Show-Scroll-Img"
               onClick={() => gotopage(item.id, item.curEp, item.curSeason)}
+              style={{ borderRadius: 10 }}
             >
               <img src={item.imgUrl} alt={item.name} />
             </button>
@@ -263,16 +263,18 @@ export function UserPage({ userShows, setUserShows }) {
                       e.stopPropagation();
                       updateCurEp(item, false);
                     }}
+                    style={{ color: "black" }}
                   >
-                    <NavigateBeforeRounded />
+                    <NavigateBeforeRounded color="black" />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       updateCurEp(item, true);
                     }}
+                    style={{ color: "black" }}
                   >
-                    <NavigateNextRounded />
+                    <NavigateNextRounded color="black" />
                   </button>
                 </div>
                 <button
@@ -281,6 +283,7 @@ export function UserPage({ userShows, setUserShows }) {
                     e.stopPropagation();
                     removeShow(item);
                   }}
+                  style={{ color: "black" }}
                 >
                   Delete
                 </button>
@@ -306,6 +309,7 @@ export function UserPage({ userShows, setUserShows }) {
                     onClick={() =>
                       gotopage(item.id, item.curEp, item.curSeason)
                     }
+                    style={{ borderRadius: 10 }}
                   >
                     <img src={item.imgUrl} alt={item.name} />
                   </button>
@@ -319,6 +323,7 @@ export function UserPage({ userShows, setUserShows }) {
                         e.stopPropagation();
                         removeShow(item);
                       }}
+                      style={{ color: "black" }}
                     >
                       Delete
                     </button>
@@ -378,11 +383,15 @@ export function UserPage({ userShows, setUserShows }) {
                   </div>
                 ) : (
                   <div>
-                    <img className="user-photo" width={60} height={60}src={user.photoUrl}></img>
+                    <img
+                      className="user-photo"
+                      width={60}
+                      height={60}
+                      src={user.photoUrl}
+                    ></img>
                   </div>
                 )}
                 <p>{user.username}</p>
-  
               </>
             ) : (
               <>
@@ -393,7 +402,12 @@ export function UserPage({ userShows, setUserShows }) {
                   </div>
                 ) : (
                   <div>
-                    <img className="user-photo" width={60} height={60} src={pageUser.photoUrl}></img>
+                    <img
+                      className="user-photo"
+                      width={60}
+                      height={60}
+                      src={pageUser.photoUrl}
+                    ></img>
                   </div>
                 )}
                 <p>{pageUser.username}</p>
@@ -412,6 +426,7 @@ export function UserPage({ userShows, setUserShows }) {
             {user.username === params.username && (
               <>
                 <div onClick={() => handleType(2)}>Follow List</div>
+                <div onClick={() => handleType(3)}>Recommended</div>
               </>
             )}
           </div>

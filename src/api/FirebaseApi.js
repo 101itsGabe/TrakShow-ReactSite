@@ -84,33 +84,33 @@ export async function getUsername(username) {
   }
 }
 
-export async function searchUsernames(curUsername){
-  let username = curUsername.toLowerCase();
-  let users = []
+export async function searchUsernames(username) {
+  //let username = curUsername.toLowerCase();
+  let users = [];
   const userCollection = collection(db, "Users");
-  const userQuery = query(userCollection, 
-  where('username', '>=', username),
-  where('username', '<=', username + '\uf8ff'))
+  const userQuery = query(
+    userCollection,
+    where("username", ">=", username),
+    where("username", "<=", username + "\uf8ff")
+  );
   const querySnapshot = await getDocs(userQuery);
-  if(querySnapshot !== null){
-    querySnapshot.docs.forEach(doc => {
+  if (querySnapshot !== null) {
+    querySnapshot.docs.forEach((doc) => {
       users.push(doc.data());
     });
   }
 
   return users;
-
-
 }
 export async function getUsers() {
   const usersCollection = collection(db, "Users");
-  const userQuery = query(usersCollection, limit(50))
+  const userQuery = query(usersCollection, limit(50));
   const querySnapshot = await getDocs(userQuery);
   //const usersSnapshot = await getDocs(usersCollection);
-  if(querySnapshot){
-  const usersList = querySnapshot.docs.map((doc) => doc.data());
-  //const realList = usersList.map((user) => user.email);
-  return usersList;
+  if (querySnapshot) {
+    const usersList = querySnapshot.docs.map((doc) => doc.data());
+    //const realList = usersList.map((user) => user.email);
+    return usersList;
   }
 }
 
@@ -136,6 +136,7 @@ export async function signUpUser(email, password, username) {
         email: user.email,
         followercount: 0,
         username: username,
+        lowercaseUsername: username.toLowerCase(),
         photoUrl: "src/images/index.png",
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
@@ -185,7 +186,6 @@ export async function googleSignIn() {
   try {
     const result = await signInWithPopup(auth, provider); // Wait for the signInWithPopup Promise to resolve
     const user = result.user;
-    console.log(user);
     const userCollection = collection(db, "Users");
     const q = query(userCollection, where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
@@ -209,6 +209,7 @@ export async function googleSignIn() {
         email: user.email,
         followercount: 0,
         username: usernameStr,
+        lowercaseUsername: usernameStr.toLocaleLowerCase(),
         photoUrl: user.photoUrl,
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
@@ -257,7 +258,7 @@ export async function updateEp(user, curShow, newEp, epIndex) {
         await updateDoc(showDoc.ref, newValues);
         await addPost(user, curShow, newEp);
         const updatedDoc = await getDoc(showDoc.ref);
-        if(updatedDoc){
+        if (updatedDoc) {
           return updatedDoc;
         }
       }
@@ -389,8 +390,7 @@ export async function getComments(id) {
     commentsSnapshop.docs.forEach((doc) => {
       commentList.push(doc.data());
     });
-  }
-  else{
+  } else {
   }
 
   return { post, commentList };
@@ -783,30 +783,54 @@ export async function deleteAccount(email) {
   }
 }
 
-
-export async function uploadImage(file, user){
-  try{
-  const storageRef = ref(storage,'userPhotos/' + file.name)
-  console.log(storageRef);
-  const snapshot = await uploadBytes(storageRef, file);
-  console.log(snapshot);
-  const url = await getDownloadURL(storageRef);
-  if(url){
-  const usersCollection = collection(db, "Users");
-  const q = query(usersCollection, where("email", "==", user.email));
-  const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const userDoc = querySnapshot.docs[0];
-      // Update the photoUrl field in the user document
-      await updateDoc(userDoc.ref, {
-        photoUrl: url
-      });
-
+export async function uploadImage(file, user) {
+  try {
+    const storageRef = ref(storage, "userPhotos/" + file.name);
+    console.log(storageRef);
+    const snapshot = await uploadBytes(storageRef, file);
+    console.log(snapshot);
+    const url = await getDownloadURL(storageRef);
+    if (url) {
+      const usersCollection = collection(db, "Users");
+      const q = query(usersCollection, where("email", "==", user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        // Update the photoUrl field in the user document
+        await updateDoc(userDoc.ref, {
+          photoUrl: url,
+        });
+      }
     }
+    return url;
+  } catch (error) {
+    console.log(error.message);
   }
-  return url;
-  }
-  catch(error){
+}
+
+export async function addReview(user, show, comment, rating) {
+  try {
+    console.log(user);
+    console.log(show);
+    const usersCollection = collection(db, "UserRecs");
+    const newdoc = {
+      showID: show.id,
+      showName: show.name,
+      averageRating: 0,
+    };
+
+    //await addDoc(usersCollection,
+
+    const tvShowsCollection = collection(newdoc, "comments");
+
+    const newComment = {
+      userEmail: user.email,
+      username: user.username,
+      comment: comment,
+      rating: rating,
+    };
+    console.log(newdoc);
+  } catch (error) {
     console.log(error.message);
   }
 }

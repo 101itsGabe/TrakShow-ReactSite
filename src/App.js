@@ -96,9 +96,7 @@ const AppContent = () => {
       />
       <Route
         path="/userpage/user/:username"
-        element={
-          <UserPage userShows={userShows} setUserShows={setShows} />
-        }
+        element={<UserPage userShows={userShows} setUserShows={setShows} />}
       />
       <Route path="/feedpage" element={<FeedPage />} />
       <Route path="/signuppage" element={<SignUpPage />} />
@@ -106,7 +104,7 @@ const AppContent = () => {
         path="/singlefeedpage/:postId"
         element={<SingleFeedPage user={user} />}
       />
-      <Route path="/settings/user/:username" element={<SettingsPage/>}/>
+      <Route path="/settings/user/:username" element={<SettingsPage />} />
     </Routes>
   );
 };

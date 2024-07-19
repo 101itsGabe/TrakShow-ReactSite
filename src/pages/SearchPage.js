@@ -21,7 +21,7 @@ export const SearchPage = ({ user }) => {
   const [selectedOption, setSelectedOption] = useState("");
   const [curPage, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [userSearchTerm, setUserSearch] = useState("")
+  const [userSearchTerm, setUserSearch] = useState("");
   const nav = useNavigate();
 
   useEffect(() => {
@@ -42,21 +42,19 @@ export const SearchPage = ({ user }) => {
   };
 
   const handleUserSearch = async (s) => {
-    try{
-      if(s !== ""){
-      const searchedUsers = await searchUsernames(s);
-      console.log(searchedUsers);
-      setList(searchedUsers);
-      }
-      else{
+    try {
+      if (s !== "") {
+        const searchedUsers = await searchUsernames(s);
+        console.log(searchedUsers);
+        setList(searchedUsers);
+      } else {
         const userRes = await getUsers();
         setList(userRes);
       }
-    }
-    catch(error){
+    } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const handleNextPage = async (type) => {
     let pageNum;
@@ -76,8 +74,7 @@ export const SearchPage = ({ user }) => {
       setSearchResults(results);
     } catch (error) {
       console.log(error.message);
-    }
-    finally{
+    } finally {
       setLoading(true);
     }
   };
@@ -95,22 +92,20 @@ export const SearchPage = ({ user }) => {
   };
 
   const handleKeyDown = async (event) => {
-
     if (event.key === "Enter") {
-      if(typeSearch){
-      try {
-        await handleSearch(event.target.value);
-      } catch (error) {
-        console.log(error.message);
+      if (typeSearch) {
+        try {
+          await handleSearch(event.target.value);
+        } catch (error) {
+          console.log(error.message);
+        }
+      } else {
+        try {
+          await handleUserSearch(event.target.value);
+        } catch (error) {
+          console.log(error.message);
+        }
       }
-    }
-    else{
-      try{
-        await handleUserSearch(event.target.value);
-      } catch(error){
-        console.log(error.message);
-      }
-    }
     }
   };
 
@@ -135,45 +130,48 @@ export const SearchPage = ({ user }) => {
         setList(userRes);
       } catch (error) {
         console.error("Error fetching recommendations:", error);
-      }
-      finally{
+      } finally {
         setLoading(true);
       }
     };
 
     fetchRecommendations();
-
   }, []); // Empty dependency array means this effect runs once on component mount
 
   return (
     <div>
-      {loading ? <>
-      {typeSearch ? <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Search show name..."
-        className="search-bar"
-      />
-      </div> : <>
-      <input
-        type="text"
-        value={userSearchTerm}
-        onChange={(e) => setUserSearch(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Search username..."
-        className="search-bar"
-      />
-      </>}
+      {loading ? (
+        <>
+          {typeSearch ? (
+            <div>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search show name..."
+                className="search-bar"
+              />
+            </div>
+          ) : (
+            <>
+              <input
+                type="text"
+                value={userSearchTerm}
+                onChange={(e) => setUserSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search username..."
+                className="search-bar"
+              />
+            </>
+          )}
 
-      <div className="header-btn-search">
-        <button onClick={() => handleType(true)}>Shows</button>
-        <button onClick={() => handleType(false)}>Users</button>
-      </div>
+          <div className="header-btn-search">
+            <button onClick={() => handleType(true)}>Shows</button>
+            <button onClick={() => handleType(false)}>Users</button>
+          </div>
 
-      {/*
+          {/*
       <select id="dropdown" value={selectedOption} onChange={handleDropChange}>
         <option value="">Select</option>
         <option value="Action">Action</option>
@@ -186,65 +184,77 @@ export const SearchPage = ({ user }) => {
       </select>
       */}
 
-      {typeSearch ? (
-        <div className="Search-Scroll">
-          {searchResults.map((item, index) => (
-            <div key={index}>
-              <button onClick={() => gotopage(item.id || item.show.id)}>
-                {item.image && item.image.medium ? (
-                  <img src={item.image.medium} alt={item.name || "Image"} />
-                ) : item.show && item.show.image && item.show.image.medium ? (
-                  <img
-                    src={item.show.image.medium}
-                    alt={item.show.name || "Image"}
-                  />
-                ) : (
-                  <span>No Image Available</span>
-                )}
-              </button>
-              <p style={{ color: "white", fontWeight: "bold" }}> {item.name || item.show.name}</p>
+          {typeSearch ? (
+            <div className="Search-Scroll">
+              {searchResults.map((item, index) => (
+                <div key={index} className="search-item">
+                  <button onClick={() => gotopage(item.id || item.show.id)}>
+                    {item.image && item.image.medium ? (
+                      <img src={item.image.medium} alt={item.name || "Image"} />
+                    ) : item.show &&
+                      item.show.image &&
+                      item.show.image.medium ? (
+                      <img
+                        src={item.show.image.medium}
+                        alt={item.show.name || "Image"}
+                      />
+                    ) : (
+                      <span>No Image Available</span>
+                    )}
+                  </button>
+                  <p style={{ color: "white", fontWeight: "bold" }}>
+                    {" "}
+                    {item.name || item.show.name}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="User-Container">
-          <div className="User-Scroll">
-            {userList.map((item, index) => (
-              <div key={index}>
-                <button className="User-Btn" onClick={() => gotoUser(item)}>
-                  <p style={{ color: "white" }}>{item.username}</p>
+          ) : (
+            <div className="User-Container">
+              <div className="User-Scroll">
+                {userList.map((item, index) => (
+                  <div key={index}>
+                    <button className="User-Btn" onClick={() => gotoUser(item)}>
+                      <p style={{ color: "white" }}>{item.username}</p>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {typeSearch ? (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: 15,
+                }}
+              >
+                <button
+                  onClick={() => {
+                    handleNextPage(false);
+                  }}
+                >
+                  <NavigateBeforeRounded />
+                </button>
+                <p className="Page-Btn-Text">{curPage}</p>
+                <button
+                  onClick={() => {
+                    handleNextPage(true);
+                  }}
+                >
+                  <NavigateNextRounded />
                 </button>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {typeSearch ? (
-        <>
-          <div style={{ display: "flex", justifyContent:"center" , padding: 15 }}>
-            <button
-              onClick={() => {
-                handleNextPage(false);
-              }}
-            >
-              <NavigateBeforeRounded />
-            </button>
-            <p className="Page-Btn-Text">{curPage}</p>
-            <button
-              onClick={() => {
-                handleNextPage(true);
-              }}
-            >
-              <NavigateNextRounded />
-            </button>
-          </div>
+            </>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
-        <></>
+        <BeatLoader color="white" />
       )}
-      </> 
-      : <BeatLoader color="white"/>
-}
     </div>
   );
 };

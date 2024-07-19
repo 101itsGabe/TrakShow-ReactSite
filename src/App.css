@@ -97,7 +97,7 @@
   background-color: transparent;
   cursor: pointer;
   border: none;
-  /* Remove the default border */ 
+  /* Remove the default border */
   border-radius: 10px;
   border-width: 1px;
   transition: background-color 0.05s ease, transform 0.05s ease;
@@ -322,7 +322,6 @@
 
 .user-info p {
   margin-top: 5px;
-  
 }
 
 .actions {
@@ -364,6 +363,10 @@
   /* Remove default border */
 }
 
+.Google-Btn:hover {
+  background-color: #666;
+}
+
 .Finished-Scroll {
   display: flex;
   flex-wrap: wrap;
@@ -393,6 +396,19 @@ body {
   justify-content: center;
   align-items: flex-start;
   padding: 20px;
+}
+.search-iem {
+  background-color: var(--dark-gray);
+  color: var(--highlight-color);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.search-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .show-item {
@@ -449,7 +465,7 @@ body {
 }
 
 .navigation-buttons button:hover {
-  background-color: gray
+  background-color: gray;
 }
 
 .delete-btn {
@@ -471,7 +487,6 @@ body {
   font-size: 16px;
   text-align: center;
 }
-
 
 .User-Content {
   display: flex;
@@ -637,7 +652,7 @@ body {
 
 .header-btn button:hover {
   border-radius: 10px;
-  background-color: var(--hover-btn)
+  background-color: var(--hover-btn);
 }
 
 /* Background overlay for AddCommentPage */
@@ -764,12 +779,10 @@ body {
   padding: 20px;
 }
 
-
 .Users-Btn div:hover {
   border-radius: 10px;
   background-color: var(--hover-btn);
 }
-
 
 .Page-Btn-Text {
   color: white;
@@ -799,10 +812,10 @@ body {
 
 .default-photo {
   width: 80px;
-  height: 80px; 
+  height: 80px;
 }
 
-.user-info{
+.user-info {
   display: flex;
   padding-left: 20px;
   gap: 10px;
@@ -811,11 +824,11 @@ body {
   cursor: default;
 }
 
-.user-info img{
+.user-info img {
   border-radius: 10px;
 }
 
-.user-info p{
+.user-info p {
   padding-top: 25px;
 }
 
@@ -830,13 +843,18 @@ body {
   padding: 0; /* Remove default padding */
 }
 
-.change-image{
+.change-image {
   padding: 10px;
   justify-content: center;
   align-items: center;
 }
 
-
+.review-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {
@@ -881,9 +899,8 @@ body {
     /* One item per row on smaller screens */
     max-width: calc(100% - 20px);
   }
-  .Show-Scroll-Img {
-    border-color: transparent;
-    background-color: transparent;
+  .Show-Scroll-Img > button {
+    color: green;
   }
 
   .search-bar {

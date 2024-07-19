@@ -1,4 +1,10 @@
-import { useAsyncError, useParams, useLocation } from "react-router-dom";
+import {
+  useAsyncError,
+  useParams,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { getShow, getSearch, getEps } from "../api/TVShowApi";
 import React, { useEffect, useState } from "react";
 import {
@@ -7,12 +13,15 @@ import {
   getUserShows,
   isShowAdded,
   updateEp,
+  addReview,
 } from "../api/FirebaseApi";
 import "../App.css";
 import { Header } from "../pages/Header";
 import { useUser } from "../hooks/userContext";
-import { ShareLocationTwoTone } from "@mui/icons-material";
+import { Star, StarBorder, StarHalf } from "@mui/icons-material";
 import { BeatLoader } from "react-spinners";
+import { hover } from "@testing-library/user-event/dist/hover";
+import { Rating } from "react-simple-star-rating";
 
 export const ShowPage = ({ setUserShows }) => {
   const [curShow, setCurShow] = useState(null); // State for current show
@@ -24,15 +33,37 @@ export const ShowPage = ({ setUserShows }) => {
   const [curSeason, setSeason] = useState(0);
   const [curEp, setEp] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [isReviewing, setReview] = useState(false);
+  const [userComment, setComment] = useState("");
+  const [userRating, setRating] = useState(0.0);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const param1 = params.get("param1");
   const param2 = params.get("param2");
+  const nav = useNavigate();
 
   const user = useUser().user;
 
+  const handleRating = (num) => {
+    setRating(num);
+    console.log(num);
+  };
+
   const stripHtmlTags = (htmlString) => {
     return htmlString.replace(/<[^>]+>/g, "");
+  };
+
+  const navToReview = () => {
+    nav("/reviewpage/" + curShow.id, { state: { show: curShow } });
+  };
+
+  const submitReview = async () => {
+    try {
+      await addReview(user, curShow, userComment, userRating);
+      setReview(false);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const btnAddShow = async () => {
@@ -63,9 +94,11 @@ export const ShowPage = ({ setUserShows }) => {
       try {
         const showData = await getShow(showID);
         setCurShow(showData);
-        setIsAdded(await isShowAdded(user.email, showData));
-        setDesc(stripHtmlTags(showData.summary));
-        //console.log(showData);
+        if (user) {
+          setIsAdded(await isShowAdded(user.email, showData));
+          setDesc(stripHtmlTags(showData.summary));
+          //console.log(showData);
+        }
       } catch (error) {
         console.error("error", error);
       } finally {
@@ -113,7 +146,48 @@ export const ShowPage = ({ setUserShows }) => {
         curShow != null && (
           <>
             <div className="Show-Page">
-              <img src={curShow.image.original}></img>
+              <div>
+                <img src={curShow.image.original}></img>
+                {isReviewing ? (
+                  <div className="review-column">
+                    <div style={{ padding: 10 }}>
+                      <Rating
+                        onClick={handleRating}
+                        rating={userRating}
+                        transition
+                        allowFraction
+                      />
+                    </div>
+                    <textarea
+                      style={{
+                        height: "150px",
+                        width: "75%",
+                        fontSize: "16px",
+                        padding: 20,
+                        margin: 10,
+                      }}
+                      value={userComment}
+                      onChange={(e) => {
+                        setComment(e.target.value);
+                      }}
+                    />
+                    <button className="Google-Btn" onClick={submitReview}>
+                      Submit Review
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      className="Google-Btn"
+                      onClick={() => {
+                        setReview(true);
+                      }}
+                    >
+                      Leave Review
+                    </button>
+                  </>
+                )}
+              </div>
               <div>
                 <p style={{ fontSize: 20, fontWeight: "bold" }}>
                   {curShow.name}
@@ -124,7 +198,7 @@ export const ShowPage = ({ setUserShows }) => {
                 <p>Episode length: {episodes.length}</p>
                 {isAdded ? <p>Choose Your Episode!</p> : <></>}
 
-                <div class="Ep-Scroll">
+                <div className="Ep-Scroll">
                   {episodes.map((item, index) => (
                     <div
                       onClick={() => {
