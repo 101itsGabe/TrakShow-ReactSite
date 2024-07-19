@@ -53,8 +53,7 @@ export const FeedPage = () => {
 
   const navToFeed = (post) => {
     const curPost = post.post;
-    console.log(post);
-    nav("/singlefeedpage/" + curPost.id, { state: { post: curPost } });
+    nav("/singlefeedpage/" + curPost.id, { state: { post: post } });
   };
 
   const navToUser = (username) => {
@@ -162,30 +161,28 @@ export const FeedPage = () => {
                 //const isLiked = false;
                 return (
                   <div key={index} className="feed-item">
-                    <div className="user-info">
+                    <div className="user-info"
+                    onClick={() => {
+                      navToUser(item.post.username);
+                    }}>
 
                       {!item.post.photoUrl||
                       item.post.photoUrl === "src/images/index.png" ? (
                         <>
                         <img src={defaultPhoto}
                          className="avatar"></img>
-                        
+                        <p>{item.post.username}</p>
                         </>
                         
                       ) : (
-                        <div
-                      className="user-info"
-                      onClick={() => {
-                        navToUser(item.post.username);
-                      }}
-                    >
+                        <>
                       <img
                         src={item.post.photoUrl}
                         alt="User Avatar"
                         className="avatar"
                       />
                       <p>{item.post.username}</p>
-                    </div>
+                    </>
                     
                       )}
                     </div>
@@ -195,7 +192,8 @@ export const FeedPage = () => {
                         onClick={() => addLikeBtn(item)}
                         className="action-button"
                       >
-                        <ThumbUpOffAlt /> <p>{item.post.likes}</p>
+                        {item.liked ? <ThumbUpAlt /> : <ThumbUpOffAlt />}
+                        <p>{item.post.likes}</p>
                       </button>
                       <button
                         onClick={() => navToFeed(item)}
@@ -220,7 +218,7 @@ export const FeedPage = () => {
               scrollableTarget="scrollableDiv"
               loader={
                 <div>
-                  <BeatLoader color="white" />
+                  <BeatLoader color="" />
                   <p style={{ color: "white" }}>Loading...</p>
                 </div>
               }
@@ -231,18 +229,29 @@ export const FeedPage = () => {
 
                 return (
                   <div key={index} className="feed-item">
-                    <div
-                      className="user-info"
-                      onClick={() => {
-                        navToUser(item.post.username);
-                      }}
-                    >
+                    <div className="user-info"
+                    onClick={() => {
+                      navToUser(item.post.username);
+                    }}>
+                    {!item.post.photoUrl||
+                      item.post.photoUrl === "src/images/index.png" ? (
+                        <>
+                        <img src={defaultPhoto}
+                         className="avatar"></img>
+                        <p>{item.post.username}</p>
+                        </>
+                        
+                      ) : (
+                        <>
                       <img
                         src={item.post.photoUrl}
                         alt="User Avatar"
                         className="avatar"
                       />
                       <p>{item.post.username}</p>
+                    </>
+                    
+                      )}
                     </div>
                     <p className="comment">{item.post.comment}</p>
                     <div className="actions">

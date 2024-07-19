@@ -370,15 +370,15 @@ export function UserPage({ userShows, setUserShows }) {
           <div className="user-info">
             {pageUser === null ? (
               <>
-                {user.photoURL === "" ||
-                user.photoURL === null ||
-                user.photoURL === "src/images/index.png" ? (
+                {user.photoUrl === "" ||
+                user.photoUrl === null ||
+                user.photoUrl === "src/images/index.png" ? (
                   <div>
                     <img className="default-photo" src={defaultPhoto} />
                   </div>
                 ) : (
                   <div>
-                    <img src={user.photoUrl}></img>
+                    <img className="user-photo" width={60} height={60}src={user.photoUrl}></img>
                   </div>
                 )}
                 <p>{user.username}</p>
@@ -386,15 +386,14 @@ export function UserPage({ userShows, setUserShows }) {
               </>
             ) : (
               <>
-                {!pageUser.photoURL ||
-                pageUser.photoURL === "src/images/index.png" ? (
+                {!pageUser.photoUrl ||
+                pageUser.photoUrl === "src/images/index.png" ? (
                   <div>
                     <img className="default-photo" src={defaultPhoto} />
                   </div>
                 ) : (
                   <div>
-                    <p>Not Null</p>
-                    <p>{pageUser.photoUrl}</p>
+                    <img className="user-photo" width={60} height={60} src={pageUser.photoUrl}></img>
                   </div>
                 )}
                 <p>{pageUser.username}</p>

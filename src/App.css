@@ -303,7 +303,6 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
-  padding: 10px;
 }
 
 .user-info p {
@@ -315,8 +314,8 @@
 }
 
 .user-info .avatar {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   margin-right: 5px;
 }
@@ -829,6 +828,12 @@ body {
 .stacked-container p {
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
+}
+
+.change-image{
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 

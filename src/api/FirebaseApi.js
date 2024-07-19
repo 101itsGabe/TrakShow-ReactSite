@@ -31,6 +31,7 @@ import { addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getEps } from "./TVShowApi";
 import { queryByRole } from "@testing-library/react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDixyNjSzDT1dcYNqD2NYCAaOstvbrS-7o",
@@ -47,6 +48,7 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
+const storage = getStorage(app);
 
 setPersistence(auth, browserLocalPersistence)
   .then(() => {
@@ -82,7 +84,8 @@ export async function getUsername(username) {
   }
 }
 
-export async function searchUsernames(username){
+export async function searchUsernames(curUsername){
+  let username = curUsername.toLowerCase();
   let users = []
   const userCollection = collection(db, "Users");
   const userQuery = query(userCollection, 
@@ -133,7 +136,7 @@ export async function signUpUser(email, password, username) {
         email: user.email,
         followercount: 0,
         username: username,
-        photoURL: "src/images/index.png",
+        photoUrl: "src/images/index.png",
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
       const followingCollection = collection(newdoc, "following");
@@ -192,8 +195,8 @@ export async function googleSignIn() {
       curData = doc.data();
       if (!("photoUrl" in curData)) {
         let newData = null;
-        if (user.photoURL !== "" || user.photoURL !== null) {
-          newData = { ...curData, photoUrl: user.photoURL }; // Replace 'url_of_the_photo' with the actual URL or value you need
+        if (user.photoUrl !== "" || user.photoUrl !== null) {
+          newData = { ...curData, photoUrl: user.photoUrl }; // Replace 'url_of_the_photo' with the actual URL or value you need
         } else {
           newData = { ...curData, photoUrl: "src/images/index.png" };
         }
@@ -206,7 +209,7 @@ export async function googleSignIn() {
         email: user.email,
         followercount: 0,
         username: usernameStr,
-        photoURL: user.photoURL,
+        photoUrl: user.photoUrl,
       });
       const tvShowsCollection = collection(newdoc, "tvshows");
       const followingCollection = collection(newdoc, "following");
@@ -386,6 +389,8 @@ export async function getComments(id) {
     commentsSnapshop.docs.forEach((doc) => {
       commentList.push(doc.data());
     });
+  }
+  else{
   }
 
   return { post, commentList };
@@ -778,6 +783,32 @@ export async function deleteAccount(email) {
   }
 }
 
-//backend updating function{}
+
+export async function uploadImage(file, user){
+  try{
+  const storageRef = ref(storage,'userPhotos/' + file.name)
+  console.log(storageRef);
+  const snapshot = await uploadBytes(storageRef, file);
+  console.log(snapshot);
+  const url = await getDownloadURL(storageRef);
+  if(url){
+  const usersCollection = collection(db, "Users");
+  const q = query(usersCollection, where("email", "==", user.email));
+  const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0];
+      // Update the photoUrl field in the user document
+      await updateDoc(userDoc.ref, {
+        photoUrl: url
+      });
+
+    }
+  }
+  return url;
+  }
+  catch(error){
+    console.log(error.message);
+  }
+}
 
 export { app, analytics, db };

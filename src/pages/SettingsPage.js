@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../hooks/userContext";
-import { changeUsername } from "../api/FirebaseApi";
+import { changeUsername, uploadImage } from "../api/FirebaseApi";
 import { DeleteConfirm } from "./DeleteAccountPopup";
 
 export const SettingsPage = () => {
@@ -11,7 +11,7 @@ export const SettingsPage = () => {
   const [email, setEmail] = useState("");
   const [cofirm, setConfirm] = useState(false);
   const [imageFile, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState("")
+  const [ifChanged, setChanged] = useState(false);
 
   useEffect(() => {
     if (user != null) {
@@ -27,9 +27,27 @@ export const SettingsPage = () => {
     setUserName(e.target.value);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     setFile(e.target.files[0]);
   }
+
+  const handleUpload = async () => {
+    try{
+      if(imageFile){
+        const url = await uploadImage(imageFile, user);
+        console.log(url);
+      }
+    }
+    catch(error){
+      console.log(error.message);
+    }
+    finally{
+      if(imageFile){
+      setChanged(true);
+      }
+    }
+  }
+
   const saveUsername = async () => {
     try {
       await changeUsername(user.email, username);
@@ -98,10 +116,17 @@ export const SettingsPage = () => {
         </div>
       )}
       <p style={{ color: "white" }}>Email: {email}</p>
+      <div className="change-image">
       <input 
         type="file"
         onChange={handleFileChange}
-      />
+    
+      ></input>
+      <button className="Google-Btn"
+      onClick={handleUpload}
+      style={{margin: 10}}>Change Profile Picture</button>
+      {ifChanged ? (<><p>Changed successfully</p></>) : (<></>)}
+      </div>
       <button
         className="Google-Btn"
         style={{ backgroundColor: "red", color: "white" }}

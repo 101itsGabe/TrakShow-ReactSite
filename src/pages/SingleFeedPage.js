@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getComments, deleteComment } from "../api/FirebaseApi";
+import { getComments, deleteComment, addLike } from "../api/FirebaseApi";
 import {
   ThumbUpOffAlt,
+  ThumbUpAlt,
   AddComment,
   Delete,
   WarningAmber,
@@ -12,14 +13,21 @@ import { AddCommentPage } from "./AddCommentPage";
 export const SingleFeedPage = ({ user }) => {
   const location = useLocation();
   const { post } = location.state;
+  const [curPost, setPost] = useState(null);
+  const [isLiked, setLiked] = useState(false);
   const [commentList, setList] = useState([]);
   const [isAddComment, setAddComment] = useState(false);
 
   useEffect(() => {
+    if (post) {
+      console.log(post);
+      setPost(post.post);
+      setLiked(post.liked);
+    }
+
     const fetchComments = async () => {
       try {
-        const curList = await getComments(post.id);
-        const visList = curList.commentList.map((doc) => doc.isSpoiler);
+        const curList = await getComments(post.post.id);
         console.log(curList.commentList);
         if (curList) {
           setList(curList.commentList);
@@ -33,6 +41,18 @@ export const SingleFeedPage = ({ user }) => {
       fetchComments();
     }
   }, [post]);
+
+  const addLikeBtn = async() =>{
+    try{
+    if(curPost){
+    const newPost = await addLike(user.email, curPost);
+    setLiked(!isLiked);
+    }
+  }
+  catch(error){
+    console.log(error.message);
+  }
+  }
 
   const addCommentbtn = () => {
     setAddComment(true);
@@ -67,12 +87,14 @@ export const SingleFeedPage = ({ user }) => {
 
   return (
     <div>
-      <p style={{ color: "white" }}>{post.comment}</p>
-      <div>
-        <button>
-          <ThumbUpOffAlt />
+      {curPost ? (<>
+      <p style={{ color: "white" }}>{curPost.comment}</p>
+      </>):(<></>)}
+      <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <button onClick={() => addLikeBtn()} className="action-button">
+          {isLiked ? <ThumbUpAlt /> : <ThumbUpOffAlt />}
         </button>
-        <button onClick={addCommentbtn}>
+        <button onClick={addCommentbtn} className="action-button">
           <AddComment />
         </button>
       </div>
@@ -85,7 +107,6 @@ export const SingleFeedPage = ({ user }) => {
                   <div className="Comment-Item">
                     {item.isSpoiler ? (
                       <>
-                        <p>IS SPOILER</p>
                         <div onClick={() => {}}>
                           <p style={{ color: "white" }}>{item.email}</p>
                         </div>
@@ -109,8 +130,6 @@ export const SingleFeedPage = ({ user }) => {
                       </>
                     ) : (
                       <>
-                        <p>NO SPOILER</p>
-
                         <p style={{ color: "white" }}>{item.email}</p>
                         <p style={{ color: "white" }}>{item.comment}</p>
                         {item.email === user.email ? (
@@ -136,7 +155,7 @@ export const SingleFeedPage = ({ user }) => {
         <div className="Add-Comment-Background">
           <AddCommentPage
             setAddComment={setAddComment}
-            post={post}
+            post={post.post}
             handleAddComment={handleAddComment}
           />
         </div>

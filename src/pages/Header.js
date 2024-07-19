@@ -31,8 +31,11 @@ export const Header = ({ user, setUser }) => {
     }
   };
 
-  const navToSettings = () => {
+  const navToSettings = (type) => {
     nav("/settings/user/" + user.username);
+    if (type) {
+      setMenuToggle(!isMenuToggle);
+    }
   };
 
   const navToFeed = (type) => {
@@ -91,7 +94,7 @@ export const Header = ({ user, setUser }) => {
           </button>
           <button
             onClick={() => {
-              navToSettings();
+              navToSettings(false);
             }}
           >
             <div className="stacked-container">
@@ -156,7 +159,7 @@ export const Header = ({ user, setUser }) => {
             <button
               className="Menu-barbtn"
               onClick={() => {
-                navToSettings();
+                navToSettings(true);
               }}
             >
               <div className="stacked-container">
