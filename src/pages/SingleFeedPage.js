@@ -42,17 +42,16 @@ export const SingleFeedPage = ({ user }) => {
     }
   }, [post]);
 
-  const addLikeBtn = async() =>{
-    try{
-    if(curPost){
-    const newPost = await addLike(user.email, curPost);
-    setLiked(!isLiked);
+  const addLikeBtn = async () => {
+    try {
+      if (curPost) {
+        const newPost = await addLike(user.email, curPost);
+        setLiked(!isLiked);
+      }
+    } catch (error) {
+      console.log(error.message);
     }
-  }
-  catch(error){
-    console.log(error.message);
-  }
-  }
+  };
 
   const addCommentbtn = () => {
     setAddComment(true);
@@ -60,7 +59,7 @@ export const SingleFeedPage = ({ user }) => {
 
   const deleteCommentBtn = async (comment) => {
     try {
-      await deleteComment(post.id, comment.id);
+      await deleteComment(post.post.id, comment.id);
       const newList = commentList.filter((doc) => doc.id !== comment.id);
       setList(newList);
     } catch (error) {
@@ -87,10 +86,20 @@ export const SingleFeedPage = ({ user }) => {
 
   return (
     <div>
-      {curPost ? (<>
-      <p style={{ color: "white" }}>{curPost.comment}</p>
-      </>):(<></>)}
-      <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+      {curPost ? (
+        <>
+          <p style={{ color: "white" }}>{curPost.comment}</p>
+        </>
+      ) : (
+        <></>
+      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <button onClick={() => addLikeBtn()} className="action-button">
           {isLiked ? <ThumbUpAlt /> : <ThumbUpOffAlt />}
         </button>

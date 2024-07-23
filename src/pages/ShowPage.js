@@ -13,7 +13,7 @@ import {
   getUserShows,
   isShowAdded,
   updateEp,
-  addReview,
+  addRec,
 } from "../api/FirebaseApi";
 import "../App.css";
 import { Header } from "../pages/Header";
@@ -59,7 +59,7 @@ export const ShowPage = ({ setUserShows }) => {
 
   const submitReview = async () => {
     try {
-      await addReview(user, curShow, userComment, userRating);
+      await addRec(user, curShow, userComment, userRating);
       setReview(false);
     } catch (error) {
       console.log(error.message);

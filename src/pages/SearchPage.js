@@ -149,7 +149,7 @@ export const SearchPage = ({ user }) => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Search show name..."
+                placeholder="Search Show Name..."
                 className="search-bar"
               />
             </div>
@@ -160,7 +160,7 @@ export const SearchPage = ({ user }) => {
                 value={userSearchTerm}
                 onChange={(e) => setUserSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Search username..."
+                placeholder="Search Username..."
                 className="search-bar"
               />
             </>

@@ -1,11 +1,13 @@
 :root {
-  --main-bg-color: #213a61;
+  --main-bg-color: #527b90;
+  --show-bg-color: #729cb2;
   --accent-btn-color: #305080;
+  --faded-accent: #5b82bb;
   --user-show-color: rgb(225, 225, 225);
-  --header-color: rgba(0, 0, 0, 0.693);
+  --header-color: #292828;
   --dark-gray: #1e1e1e;
   --light-gray: #2a2a2a;
-  --primary-color: #ffffff; /* White color for text */
+  --primary-color: #cccccc; /* White color for text */
   --secondary-color: #e0e0e0; /* Light gray for background elements */
   --highlight-color: #4a90e2; /* Complementary blue for highlights */
   --error-color: #ff6b6b; /* Error color for delete button */
@@ -47,7 +49,7 @@
 .Comment-Item {
   border: 2px solid var(--secondary-color); /* Correctly set the border property */
   border-radius: 10px;
-  background-color: var(--accent-btn-color);
+  background-color: var(--main-bg-color);
   width: 100%;
   max-width: 800px; /* Max width for better readability */
   padding: 20px;
@@ -100,11 +102,8 @@
   /* Remove the default border */
   border-radius: 10px;
   border-width: 1px;
-  transition: background-color 0.05s ease, transform 0.05s ease;
-}
-
-.Search-Scroll div button:hover {
-  background-color: #e0e0e058;
+  transition: background-color 0.05s ease, transform 0.05s ease,
+    box-shadow 0.05s ease;
 }
 
 .Search-Scroll div button img {
@@ -140,7 +139,7 @@
 
 .Menu-bar {
   display: none;
-  background-color: #12294b;
+  background-color: var(--main-bg-color);
   width: 250px;
   height: 100%;
   display: flex;
@@ -389,16 +388,7 @@ body {
   text-align: center;
 }
 
-.Show-Scroll {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
-}
-.search-iem {
-  background-color: var(--dark-gray);
+.search-item {
   color: var(--highlight-color);
   border-radius: 10px;
   padding: 15px;
@@ -408,12 +398,31 @@ body {
 
 .search-item:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 12px var(--primary-color);
+}
+
+/*Acount Page Show Scroll*/
+
+.Show-Scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 50px;
+}
+
+.Show-Scroll > div {
+  flex: 0 0 calc(33.33% - 40px);
+  /* Three items per row with some gap */
+  max-width: calc(33.33% - 40px);
+  /* Adjust based on the number of items you want per row */
+  margin: 2px;
+  /* Adjust margin as needed */
 }
 
 .show-item {
-  background-color: var(--dark-gray);
-  color: var(--highlight-color);
+  background-color: var(--main-bg-color);
   border-radius: 10px;
   padding: 15px;
   text-align: center;
@@ -424,7 +433,7 @@ body {
 
 .show-item:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px var(--primary-color); /* Enhanced shadow effect */
 }
 
 .show-item img {
@@ -442,10 +451,6 @@ body {
   font-size: 16px;
   font-weight: bold;
   color: white;
-}
-
-.show-actions {
-  margin-top: 10px;
 }
 
 .navigation-buttons {
@@ -519,15 +524,6 @@ body {
   /* Optional, aligns text to the left */
 }
 
-.Show-Scroll > div {
-  flex: 0 0 calc(33.33% - 30px);
-  /* Three items per row with some gap */
-  max-width: calc(33.33% - 30px);
-  /* Adjust based on the number of items you want per row */
-  margin: 4px;
-  /* Adjust margin as needed */
-}
-
 .sign-in-input {
   display: flex;
   flex-direction: column;
@@ -541,7 +537,11 @@ body {
   height: 10px;
   /* Ensure padding and border are included in the element's total width and height */
   font-size: 20px;
-  background-color: #305080;
+  background-color: var(--main-bg-color);
+  color: white;
+}
+
+.sign-in-input div input::placeholder {
   color: white;
 }
 
@@ -578,9 +578,13 @@ body {
   box-sizing: border-box;
   /* Ensure padding and border are included in the element's total width and height */
   font-size: 20px;
-  background-color: var(--accent-btn-color);
+  background-color: var(--main-bg-color);
   color: white;
   margin: 15px;
+}
+
+.search-bar::placeholder {
+  color: white;
 }
 
 .follow-btn {
@@ -657,12 +661,7 @@ body {
 
 /* Background overlay for AddCommentPage */
 .Add-Comment-Background {
-  background-color: rgba(
-    47,
-    47,
-    47,
-    0.43
-  ); /* Light gray with some transparency */
+  background-color: #29282875;
   position: fixed; /* Use fixed positioning to cover the whole viewport */
   top: 0;
   left: 0;
@@ -703,7 +702,7 @@ body {
   width: 100%;
   max-width: 200px; /* Fixed max width */
   padding: 10px;
-  background-color: var(--highlight-color);
+  background-color: var(--main-bg-color);
   border-radius: 10px;
   color: var(--primary-color);
   font-size: 16px;
@@ -903,6 +902,10 @@ body {
     color: green;
   }
 
+  .show-actions {
+    margin-top: 10px;
+  }
+
   .search-bar {
     border-radius: 10px;
     width: 80%;
@@ -911,7 +914,6 @@ body {
     box-sizing: border-box;
     /* Ensure padding and border are included in the element's total width and height */
     font-size: 16px;
-    background-color: #305080;
     color: white;
   }
 

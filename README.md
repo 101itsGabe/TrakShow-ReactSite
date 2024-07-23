@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# TrakShow Ios App 📺
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Website:** [TrakShow](https://trakshow-final.netlify.app/)
 
-## Available Scripts
+<div style="display: flex;">
+  <img src="ttrakShowPics/searchpage.jpg" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/feedpage.png" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/searchuser.png" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/signinpage.png" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/singlefeed.png" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/userpage.png" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/followingpage.png" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/finShows.jpg" alt="Explore Page" width="250" height="500">
+  <img src="trakShowPics/showpage.png.jpg" alt="Explore Page" width="250" height="500">
 
-In the project directory, you can run:
+</div>
 
-### `npm start`
+# Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Login Screen Options
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Login through username and password**
+  - Implemented using Firebase Authentication, allowing users to securely log in with a username and password.
+- **Login/Signup with Google**
+  - Utilizes Firebase Authentication for seamless integration with Google Sign-In, providing a quick and easy login/signup process.
+- **Sign up with email and password**
+  - New users can register using their email address and a password, facilitated by Firebase Authentication.
 
-### `npm test`
+<div style="display: flex;">
+  <img src="trakShowPics/signinpage.png" alt="Explore Page" width="250" height="500">
+</div>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Show List
 
-### `npm run build`
+- **Pulls info from [Episodate API](https://www.episodate.com/api) on app launch**
+  - Retrieves and displays the latest show information from the Episodate API every time the app is launched.
+- **Select a show and see details**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  - Users can select a show to view detailed information, including the show’s name, rating, and description.
+  - Users can also leave a rating and a review for the selected show and see what other have reviewed
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  <div style="display: flex;">
+  <img src="trakShowPics/showpage.png.jpg" alt="Explore Page" width="250" height="500">
+  </div>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Show Screen
 
-### `npm run eject`
+- **Name**
+  - Displays the name of the selected show.
+- **Rating**
+  - Shows the current rating of the show.
+- **Description of show**
+  - Provides a detailed description of the show’s plot and characters.
+- **Using Firebase to keep track of current episode**
+  - Keeps track of the user's current episode using Firebase Firestore.
+- **Add show to your list of shows**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  - Users can add shows to their personal list for easy access and tracking.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  <div style="display: flex;">
+  <img src="ttrakShowPics/searchpage.jpg" alt="Explore Page" width="250" height="500">
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  </div>
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- User Screen
 
-## Learn More
+  - See your list of your shows
+  - See who you follow
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    <div style="display: flex;">
+  <img src="trakShowPics/userpage.png" alt="UserShow Page" width="250" height="500">
+  <img src="trakShowPics/followingpage.png" alt="Following Page" width="250" height="500">
+  <img src="trakShowPics/finShows.jpg" alt="FinShow Page" width="250" height="500">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  </div>

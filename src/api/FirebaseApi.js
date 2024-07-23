@@ -786,9 +786,7 @@ export async function deleteAccount(email) {
 export async function uploadImage(file, user) {
   try {
     const storageRef = ref(storage, "userPhotos/" + file.name);
-    console.log(storageRef);
     const snapshot = await uploadBytes(storageRef, file);
-    console.log(snapshot);
     const url = await getDownloadURL(storageRef);
     if (url) {
       const usersCollection = collection(db, "Users");
@@ -808,28 +806,61 @@ export async function uploadImage(file, user) {
   }
 }
 
-export async function addReview(user, show, comment, rating) {
+export async function addRec(user, show, comment, rating) {
   try {
-    console.log(user);
-    console.log(show);
-    const usersCollection = collection(db, "UserRecs");
-    const newdoc = {
-      showID: show.id,
-      showName: show.name,
-      averageRating: 0,
-    };
+    const recCollection = collection(db, "UserRecs");
+    const recQ = query(recCollection, where("showID", "==", show.id));
+    const snapshot = await getDocs(recQ);
+    const doc = snapshot.docs[0];
+    if (doc) {
+      const newReview = {
+        username: user.username,
+        userEmail: user.email,
+        comment: comment,
+        rating: rating,
+      };
+      const reviewCollection = collection(doc.ref, "userReviews");
+      const reviewQ = query(
+        reviewCollection,
+        where("userEmail", "==", user.email)
+      );
+      const reviewDoc = await getDocs(reviewQ);
+      if (!reviewDoc.empty) {
+        await updateDoc(reviewDoc.ref, newReview);
+      } else {
+        await addDoc(reviewCollection, newReview);
+      }
+    } else {
+      const newdoc = {
+        showID: show.id,
+        showName: show.name,
+        averageRating: 0,
+      };
+      const addedDoc = await addDoc(recCollection, newdoc);
+      const userReviews = collection(addedDoc.ref, "userReviews");
+      const newReview = {
+        userEmail: user.email,
+        username: user.username,
+        comment: comment,
+        rating: rating,
+      };
 
-    //await addDoc(usersCollection,
+      await addDoc(userReviews, newReview);
+      console.log("review Added!");
+    }
 
-    const tvShowsCollection = collection(newdoc, "comments");
+    //await addDoc(usersCollection, newdoc);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
-    const newComment = {
-      userEmail: user.email,
-      username: user.username,
-      comment: comment,
-      rating: rating,
-    };
-    console.log(newdoc);
+export async function getReviewSize(showID) {
+  try {
+    const recCollection = collection(db, "UserRecs");
+    const showQ = query(recCollection, where("showID", "==", showID));
+    const snapshot = await getDocs(showQ);
+    console.log(snapshot.docs.length);
   } catch (error) {
     console.log(error.message);
   }

@@ -9,14 +9,12 @@ export const AddCommentPage = ({ setAddComment, post, handleAddComment }) => {
 
   const Replybtn = async () => {
     try {
-      console.log(post);
       const newComment = await addComment(
         post.id,
         comment,
         user.email,
         hasSpoilers
       );
-      console.log(newComment);
       handleAddComment(newComment);
       setAddComment(false);
     } catch (error) {

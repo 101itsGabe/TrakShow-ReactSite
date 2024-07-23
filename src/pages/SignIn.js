@@ -72,6 +72,7 @@ export const SignIn = ({ setUserShow }) => {
             onChange={(e) => {
               handleEmail(e);
             }}
+            placeholder="Email"
           />
         </div>
         <div>
@@ -82,6 +83,7 @@ export const SignIn = ({ setUserShow }) => {
             onChange={(e) => {
               handlePassword(e);
             }}
+            placeholder="Password"
           />
         </div>
       </div>
@@ -94,10 +96,7 @@ export const SignIn = ({ setUserShow }) => {
         Sign In
       </button>
       <div style={{ padding: 20 }}>
-        <button
-          className="Google-Btn"
-          onClick={btnSignIn}
-        >
+        <button className="Google-Btn" onClick={btnSignIn}>
           <img
             src={googleimg}
             width={40}
