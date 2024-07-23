@@ -14,7 +14,7 @@
   - New users can register using their email address and a password, facilitated by Firebase Authentication.
 
 <div style="display: flex;">
-  <img src="trakShowPics/signinpage.png" alt="Explore Page" width="400" height="500">
+  <img src="trakShowPics/signinpage.png" alt="SignIn Page" width="400" height="500">
 </div>
 
 ### Show List
@@ -27,7 +27,7 @@
   - Users can also leave a rating and a review for the selected show and see what other have reviewed
 
   <div style="display: flex;">
-  <img src="trakShowPics/showpage.png.jpg" alt="Explore Page" width="400" height="500">
+  <img src="trakShowPics/showpage.png" alt="ShowPage Page" width="800" height="800">
   </div>
 
 ### Show Screen
@@ -45,7 +45,7 @@
   - Users can add shows to their personal list for easy access and tracking.
 
   <div style="display: flex;">
-  <img src="ttrakShowPics/searchpage.jpg" alt="Explore Page" width="400" height="500">
+  <img src="trakShowPics/searchpage.jpg" alt="Search Page" width="800" height="800">
 
   </div>
 
@@ -55,8 +55,8 @@
   - See who you follow
 
     <div style="display: flex;">
-  <img src="trakShowPics/userpage.png" alt="UserShow Page" width="400" height="500">
-  <img src="trakShowPics/followingpage.png" alt="Following Page" width="400" height="500">
-  <img src="trakShowPics/finShows.jpg" alt="FinShow Page" width="400" height="500">
+  <img src="trakShowPics/userpage.png" alt="UserShow Page" width="800" height="800">
+  <img src="trakShowPics/followingpage.png" alt="Following Page" width="800" height="800">
+  <img src="trakShowPics/finShows.jpg" alt="FinShow Page" width="800" height="800">
 
   </div>
