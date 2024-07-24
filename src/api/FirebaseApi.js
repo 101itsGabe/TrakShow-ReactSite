@@ -49,6 +49,7 @@ const db = getFirestore(app);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 const storage = getStorage(app);
+const curUserReviewCollection = collection(db,"UserRecs")
 
 setPersistence(auth, browserLocalPersistence)
   .then(() => {
@@ -809,43 +810,19 @@ export async function uploadImage(file, user) {
 export async function addRec(user, show, comment, rating) {
   try {
     const recCollection = collection(db, "UserRecs");
-    const recQ = query(recCollection, where("showID", "==", show.id));
-    const snapshot = await getDocs(recQ);
+    const recQ = query(recCollection, where("showID", "==", show.id), where("userEmail","==",user.email));
+    const snapshot = await getDocs(recQ);  
     const doc = snapshot.docs[0];
-    if (doc) {
-      const newReview = {
-        username: user.username,
-        userEmail: user.email,
-        comment: comment,
-        rating: rating,
-      };
-      const reviewCollection = collection(doc.ref, "userReviews");
-      const reviewQ = query(
-        reviewCollection,
-        where("userEmail", "==", user.email)
-      );
-      const reviewDoc = await getDocs(reviewQ);
-      if (!reviewDoc.empty) {
-        await updateDoc(reviewDoc.ref, newReview);
-      } else {
-        await addDoc(reviewCollection, newReview);
-      }
-    } else {
+    if(!doc){  
       const newdoc = {
         showID: show.id,
         showName: show.name,
-        averageRating: 0,
-      };
-      const addedDoc = await addDoc(recCollection, newdoc);
-      const userReviews = collection(addedDoc.ref, "userReviews");
-      const newReview = {
         userEmail: user.email,
         username: user.username,
         comment: comment,
         rating: rating,
       };
-
-      await addDoc(userReviews, newReview);
+      await addDoc(recCollection, newdoc);
       console.log("review Added!");
     }
 
@@ -862,6 +839,27 @@ export async function getReviewSize(showID) {
     const snapshot = await getDocs(showQ);
     console.log(snapshot.docs.length);
   } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export async function getUserReviews(email){
+  try{
+    console.log("getting review");
+    let reviewList = []
+    const reviewQ = query(curUserReviewCollection, where("userEmail", "==", email));
+    const userSnapshot = await getDocs(reviewQ);
+    if(!userSnapshot.empty){
+      userSnapshot.docs.forEach(doc => {
+        console.log(doc.data());
+        reviewList.push(doc.data());
+      });
+    }
+
+    return reviewList;
+
+
+  }catch(error){
     console.log(error.message);
   }
 }

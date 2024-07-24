@@ -8,6 +8,7 @@ import {
   checkIfFollowing,
   getFollowingList,
   getUsername,
+  getUserReviews
 } from "../api/FirebaseApi";
 import { useNavigate } from "react-router-dom";
 import { getEps, getShow } from "../api/TVShowApi";
@@ -34,6 +35,7 @@ export function UserPage({ userShows, setUserShows }) {
   const [pageUser, setPageUser] = useState(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [reviewList, setReviews] =useState([]);
 
   const user = useUser().user;
 
@@ -53,6 +55,8 @@ export function UserPage({ userShows, setUserShows }) {
           if (shows.length === 0) {
             if (username === params.username) {
               curShows = await getUserShows(username);
+              const curReviewList = await getUserReviews(user.email);
+              setReviews(curReviewList);
               setMyShow(true);
             } else {
               curShows = await getUserShows(params.username);
@@ -60,6 +64,7 @@ export function UserPage({ userShows, setUserShows }) {
               const otherUser = await getUsername(params.username);
               if (otherUser) {
                 setPageUser(otherUser);
+                await getUserReviews(otherUser.email);
               }
             }
           }
@@ -426,7 +431,7 @@ export function UserPage({ userShows, setUserShows }) {
             {user.username === params.username && (
               <>
                 <div onClick={() => handleType(2)}>Follow List</div>
-                <div onClick={() => handleType(3)}>Recommended</div>
+                <div onClick={() => handleType(3)}>Reviews</div>
               </>
             )}
           </div>
