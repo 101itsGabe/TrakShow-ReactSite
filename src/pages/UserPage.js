@@ -8,7 +8,7 @@ import {
   checkIfFollowing,
   getFollowingList,
   getUsername,
-  getUserReviews
+  getUserReviews,
 } from "../api/FirebaseApi";
 import { useNavigate } from "react-router-dom";
 import { getEps, getShow } from "../api/TVShowApi";
@@ -22,8 +22,12 @@ import {
 } from "@mui/icons-material";
 import { useUser } from "../hooks/userContext";
 import defaultPhoto from "../images/index.png";
+import Rating from "@mui/material/Rating";
+import { styled } from "@mui/material/styles";
+import { BiFontSize } from "react-icons/bi";
 
 export function UserPage({ userShows, setUserShows }) {
+  const [allShows, setAllShows] = useState([]);
   const [shows, setShows] = useState([]); // Declare shows as a state variable
   const [finishedShows, setFinShow] = useState([]);
   const [isMyShow, setMyShow] = useState(false);
@@ -35,13 +39,25 @@ export function UserPage({ userShows, setUserShows }) {
   const [pageUser, setPageUser] = useState(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [reviewList, setReviews] =useState([]);
+  const [reviewList, setReviews] = useState([]);
 
   const user = useUser().user;
 
   const nav = useNavigate();
   const location = useLocation();
   const params = useParams();
+
+  const CustomRating = styled(Rating)({
+    "& .MuiRating-iconFilled": {
+      color: "#527b90;",
+    },
+    "& .MuiRating-iconHover": {
+      color: "#6d9fb8;",
+    },
+    "& .MuiRating-iconEmpty": {
+      color: "white",
+    },
+  });
 
   useEffect(() => {
     let finShow = [];
@@ -52,11 +68,11 @@ export function UserPage({ userShows, setUserShows }) {
         if (user) {
           const username = user.username;
           let curShows;
+          let curReviews;
           if (shows.length === 0) {
             if (username === params.username) {
               curShows = await getUserShows(username);
-              const curReviewList = await getUserReviews(user.email);
-              setReviews(curReviewList);
+              curReviews = await getUserReviews(user.email);
               setMyShow(true);
             } else {
               curShows = await getUserShows(params.username);
@@ -64,11 +80,12 @@ export function UserPage({ userShows, setUserShows }) {
               const otherUser = await getUsername(params.username);
               if (otherUser) {
                 setPageUser(otherUser);
-                await getUserReviews(otherUser.email);
+                curReviews = await getUserReviews(otherUser.email);
               }
             }
+            setReviews(curReviews);
           }
-          //setShows(curShows); // Update shows state with fetched data
+          setAllShows(curShows); // Update shows state with fetched data
 
           if (curShows !== null) {
             const allEpisodes = await Promise.all(
@@ -358,6 +375,43 @@ export function UserPage({ userShows, setUserShows }) {
     </div>
   );
 
+  const curReviewList = () => {
+    return (
+      <div>
+        <p>{reviewList.length}</p>
+        <div>
+          {reviewList.map((item, index) => (
+            <div key={index}>
+              <div className="review-container">
+                <div
+                  onClick={() => {
+                    const curShow = allShows.find(
+                      (show) => item.showID === show.id
+                    );
+                    if (curShow) {
+                      gotopage(curShow.id, curShow.curEp, curShow.curSeason);
+                    }
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <p style={{ fontSize: "24px", fontWeight: "bold" }}>
+                    {item.showName}
+                  </p>
+                  <img src={item.showImgUrl} />
+                </div>
+                <p style={{ width: "200px" }}>"{item.comment}"</p>
+                <div>
+                  <CustomRating precision={0.5} readOnly value={item.rating} />
+                  <p>{item.rating}/5</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderContent = () => {
     switch (pageType) {
       case 0:
@@ -366,6 +420,8 @@ export function UserPage({ userShows, setUserShows }) {
         return curFinishedShows();
       case 2:
         return curFollowList();
+      case 3:
+        return curReviewList();
     }
   };
 

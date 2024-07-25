@@ -13,7 +13,7 @@ import {
   getUserShows,
   isShowAdded,
   updateEp,
-  addRec,
+  addReview,
 } from "../api/FirebaseApi";
 import "../App.css";
 import { Header } from "../pages/Header";
@@ -21,7 +21,9 @@ import { useUser } from "../hooks/userContext";
 import { Star, StarBorder, StarHalf } from "@mui/icons-material";
 import { BeatLoader } from "react-spinners";
 import { hover } from "@testing-library/user-event/dist/hover";
-import { Rating } from "react-simple-star-rating";
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 
 export const ShowPage = ({ setUserShows }) => {
   const [curShow, setCurShow] = useState(null); // State for current show
@@ -49,6 +51,18 @@ export const ShowPage = ({ setUserShows }) => {
     console.log(num);
   };
 
+  const CustomRating = styled(Rating)({
+    "& .MuiRating-iconFilled": {
+      color: "#527b90;",
+    },
+    "& .MuiRating-iconHover": {
+      color: "#6d9fb8;",
+    },
+    "& .MuiRating-iconEmpty": {
+      color: "white",
+    },
+  });
+
   const stripHtmlTags = (htmlString) => {
     return htmlString.replace(/<[^>]+>/g, "");
   };
@@ -59,7 +73,7 @@ export const ShowPage = ({ setUserShows }) => {
 
   const submitReview = async () => {
     try {
-      await addRec(user, curShow, userComment, userRating);
+      await addReview(user, curShow, userComment, userRating);
       setReview(false);
     } catch (error) {
       console.log(error.message);
@@ -151,11 +165,13 @@ export const ShowPage = ({ setUserShows }) => {
                 {isReviewing ? (
                   <div className="review-column">
                     <div style={{ padding: 10 }}>
-                      <Rating
-                        onClick={handleRating}
-                        rating={userRating}
-                        transition
-                        allowFraction
+                      <CustomRating
+                        onChange={(event, newValue) => {
+                          handleRating(newValue);
+                        }}
+                        value={userRating}
+                        precision={0.5}
+                        color="white"
                       />
                     </div>
                     <textarea

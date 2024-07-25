@@ -1,5 +1,6 @@
 :root {
   --main-bg-color: #527b90;
+  --main-rating-color: #6d9fb8;
   --show-bg-color: #729cb2;
   --accent-btn-color: #305080;
   --faded-accent: #5b82bb;
@@ -853,6 +854,15 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.review-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  gap: 15px;
 }
 
 /* Media query for smaller screens */

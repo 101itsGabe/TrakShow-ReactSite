@@ -68,8 +68,8 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <div className="stacked-container">
-            <FaSearch />
-            <p>Search</p>
+              <FaSearch />
+              <p>Search</p>
             </div>
           </button>
           <button
@@ -77,9 +77,9 @@ export const Header = ({ user, setUser }) => {
               navToShows(false);
             }}
           >
-           <div className="stacked-container">
+            <div className="stacked-container">
               <PiTelevisionBold />
-              <p>Shows</p>
+              <p>Profile</p>
             </div>
           </button>
           <button
@@ -88,9 +88,9 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <div className="stacked-container">
-              <CgFeed/>
+              <CgFeed />
               <p>Feed</p>
-              </div>
+            </div>
           </button>
           <button
             onClick={() => {
@@ -100,7 +100,7 @@ export const Header = ({ user, setUser }) => {
             <div className="stacked-container">
               <IoIosSettings />
               <p>Settings</p>
-              </div>
+            </div>
           </button>
           <button
             onClick={() => {
@@ -108,8 +108,8 @@ export const Header = ({ user, setUser }) => {
             }}
           >
             <div className="stacked-container">
-            <FaSignOutAlt />
-            <p>Sign-Out</p>
+              <FaSignOutAlt />
+              <p>Sign-Out</p>
             </div>
           </button>
         </div>
@@ -130,8 +130,8 @@ export const Header = ({ user, setUser }) => {
               }}
             >
               <div className="stacked-container">
-              <PiTelevisionBold />
-              <p>Shows</p>
+                <PiTelevisionBold />
+                <p>Shows</p>
               </div>
             </button>
             <button
@@ -141,8 +141,8 @@ export const Header = ({ user, setUser }) => {
               }}
             >
               <div className="stacked-container">
-              <FaSearch />
-              <p>Search</p>
+                <FaSearch />
+                <p>Search</p>
               </div>
             </button>
             <button
@@ -152,8 +152,8 @@ export const Header = ({ user, setUser }) => {
               }}
             >
               <div className="stacked-container">
-              <CgFeed/>
-              <p>Feed</p>
+                <CgFeed />
+                <p>Feed</p>
               </div>
             </button>
             <button
@@ -163,8 +163,8 @@ export const Header = ({ user, setUser }) => {
               }}
             >
               <div className="stacked-container">
-              <IoIosSettings />
-              <p>Settings</p>
+                <IoIosSettings />
+                <p>Settings</p>
               </div>
             </button>
             <button
@@ -174,8 +174,8 @@ export const Header = ({ user, setUser }) => {
               }}
             >
               <div className="stacked-container">
-              <FaSignOutAlt />
-             <p>Sign Out</p>
+                <FaSignOutAlt />
+                <p>Sign Out</p>
               </div>
             </button>
           </div>
