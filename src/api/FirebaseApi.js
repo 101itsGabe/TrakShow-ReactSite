@@ -544,11 +544,12 @@ export async function getFollowingList(email) {
       const followingCollection = collection(userDoc.ref, "following");
       const followingSnapshot = await getDocs(followingCollection);
       if (!followingSnapshot.empty) {
-        followingSnapshot.forEach((doc) => {
+        followingSnapshot.forEach(async (doc) => {
           if (doc != null) {
             const data = doc.data();
             if (data.userEmail != null) {
-              followList.push(doc.data());
+              const curUser = await getCurUser(data.userEmail);
+              followList.push(curUser);
             }
           }
         });
@@ -845,13 +846,23 @@ export async function addReview(user, show, comment, rating) {
   }
 }
 
-export async function getUserReviews(email) {
+export async function getReviews(email, showID, isByEmail) {
   try {
+    console.log("Getting reviews");
     let reviewList = [];
-    const reviewQ = query(
+    let reviewQ;
+    if(isByEmail){
+    reviewQ = query(
       curUserReviewCollection,
       where("userEmail", "==", email)
     );
+    }
+    else{
+      reviewQ = query(
+        curUserReviewCollection,
+        where("showID", "==", showID)
+      );
+    }
     const userSnapshot = await getDocs(reviewQ);
     if (!userSnapshot.empty) {
       userSnapshot.docs.forEach((doc) => {
@@ -864,5 +875,6 @@ export async function getUserReviews(email) {
     console.log(error.message);
   }
 }
+
 
 export { app, analytics, db };

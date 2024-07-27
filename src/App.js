@@ -19,9 +19,11 @@ import { Header } from "./pages/Header";
 import { SignUpPage } from "./pages/SignUpPage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { SingleFeedPage } from "./pages/SingleFeedPage";
+import { ShowReviewPage } from "./pages/ShowReviewPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useCurAuth } from "./hooks/useAuth";
 import { UserProvider, useUser } from "./hooks/userContext";
+
 
 export const CurContext = createContext();
 
@@ -105,6 +107,7 @@ const AppContent = () => {
         element={<SingleFeedPage user={user} />}
       />
       <Route path="/settings/user/:username" element={<SettingsPage />} />
+      <Route path="/reviewpage/:showid" element={<ShowReviewPage/>}/>
     </Routes>
   );
 };

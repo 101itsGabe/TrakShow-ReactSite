@@ -187,12 +187,14 @@ export const ShowPage = ({ setUserShows }) => {
                         setComment(e.target.value);
                       }}
                     />
+                    <div>
                     <button className="Google-Btn" onClick={submitReview}>
                       Submit Review
                     </button>
+                    </div>
                   </div>
                 ) : (
-                  <>
+                  <div className="Show-Btn-Container">
                     <button
                       className="Google-Btn"
                       onClick={() => {
@@ -201,7 +203,8 @@ export const ShowPage = ({ setUserShows }) => {
                     >
                       Leave Review
                     </button>
-                  </>
+                    <button className="Google-Btn" onClick={navToReview}>See Reviews</button>
+                  </div>
                 )}
               </div>
               <div>
